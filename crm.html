@@ -1,0 +1,92 @@
+﻿<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Casa Brava CRM | Gestion de pedidos</title>
+    <meta name="description"
+        content="CRM bilingue para representantes: revisar pedidos, cambiar estado y revisar reservas.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container nav-wrap">
+            <a class="brand" href="index.html">Casa Brava CRM</a>
+            <div class="crm-head-actions">
+                <button id="crmLangToggle" class="btn btn-ghost" aria-label="Cambiar idioma">EN</button>
+                <button id="crmSignOut" class="btn btn-outline hidden">Sign out</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container section">
+        <section id="authGate" class="auth-gate">
+            <h1 data-i18n="authTitle">Acceso CRM del personal</h1>
+            <p data-i18n="authText">Inicia sesion con Google y valida rol de representante.</p>
+            <button id="crmSignIn" class="btn btn-primary" data-i18n="authButton">Ingresar con Google</button>
+            <p id="authMessage" class="muted-line"></p>
+        </section>
+
+        <section id="crmApp" class="hidden">
+            <div class="section-head">
+                <h1 data-i18n="crmTitle">Panel de pedidos y reservas</h1>
+                <p data-i18n="crmSub">Gestion operacional en tiempo real para representantes.</p>
+                <p id="staffBadge" class="muted-line"></p>
+            </div>
+
+            <section class="stats-grid" id="statsGrid"></section>
+
+            <section class="crm-controls">
+                <div class="menu-tabs">
+                    <button class="chip active" data-view="orders" data-i18n="viewOrders">Pedidos</button>
+                    <button class="chip" data-view="reservations" data-i18n="viewReservations">Reservas</button>
+                </div>
+                <div class="menu-tabs" id="statusFilters">
+                    <button class="chip active" data-filter="all" data-i18n="filterAll">Todos</button>
+                    <button class="chip" data-filter="pending" data-i18n="filterPending">Pendiente</button>
+                    <button class="chip" data-filter="in_progress" data-i18n="filterInProgress">En preparacion</button>
+                    <button class="chip" data-filter="accepted" data-i18n="filterAccepted">Aceptado</button>
+                    <button class="chip" data-filter="rejected" data-i18n="filterRejected">Rechazado</button>
+                </div>
+            </section>
+
+            <section id="ordersView">
+                <div id="ordersList" class="crm-grid"></div>
+            </section>
+
+            <section id="reservationsView" class="hidden">
+                <div id="reservationsList" class="crm-grid"></div>
+            </section>
+        </section>
+    </main>
+
+    <div id="reviewModal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <header>
+                <h3 id="reviewTitle">Pedido</h3>
+                <button id="closeReview" class="btn btn-ghost" aria-label="Cerrar">X</button>
+            </header>
+            <div id="reviewBody"></div>
+            <footer class="cart-actions">
+                <button id="reviewPending" class="btn btn-outline" data-i18n="btnPending">Pendiente</button>
+                <button id="reviewProgress" class="btn btn-outline" data-i18n="btnInProgress">En preparacion</button>
+                <button id="reviewAccept" class="btn btn-primary" data-i18n="btnAccept">Aceptar</button>
+                <button id="reviewReject" class="btn btn-ghost danger" data-i18n="btnReject">Rechazar</button>
+            </footer>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="js/crm.js"></script>
+</body>
+
+</html>

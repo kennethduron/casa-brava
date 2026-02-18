@@ -1,0 +1,60 @@
+﻿rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isStaff() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/staff/$(request.auth.uid))
+        && get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.active == true
+        && (get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.role in ['admin', 'agent', 'representative']);
+    }
+
+    function validOrderCreate() {
+      return request.resource.data.keys().hasOnly([
+          'displayId', 'language', 'customer', 'items', 'total', 'status', 'createdAt', 'updatedAt', 'updatedBy'
+        ])
+        && request.resource.data.customer is map
+        && request.resource.data.customer.name is string
+        && request.resource.data.customer.phone is string
+        && request.resource.data.items is list
+        && request.resource.data.total is number
+        && request.resource.data.status == 'pending';
+    }
+
+    function validReservationCreate() {
+      return request.resource.data.keys().hasOnly([
+          'name', 'phone', 'email', 'date', 'time', 'party', 'occasion', 'allergies', 'notes', 'language', 'createdAt'
+        ])
+        && request.resource.data.name is string
+        && request.resource.data.phone is string
+        && request.resource.data.party is number;
+    }
+
+    match /orders/{orderId} {
+      allow create: if validOrderCreate();
+      allow read: if isStaff();
+      allow update: if isStaff();
+      allow delete: if false;
+    }
+
+    match /reservations/{reservationId} {
+      allow create: if validReservationCreate();
+      allow read: if isStaff();
+      allow update: if isStaff();
+      allow delete: if false;
+    }
+
+    match /staff/{userId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
