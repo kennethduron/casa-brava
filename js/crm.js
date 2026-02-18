@@ -43,6 +43,15 @@ const i18n = {
     ordersCount: "Pedidos",
     pendingCount: "Pendientes",
     progressCount: "En preparacion",
+    acceptedCount: "Aceptados",
+    revenueCount: "Ingresos",
+    avgTicket: "Ticket promedio",
+    topFoodTitle: "Top comida vendida",
+    topFoodEmpty: "No hay ventas aceptadas para este periodo.",
+    qtySold: "Cantidad",
+    period_day: "Hoy",
+    period_week: "Semana",
+    period_month: "Mes",
     updated: "Estado actualizado",
     staffRole: "Rol",
     signOut: "Salir"
@@ -80,6 +89,15 @@ const i18n = {
     ordersCount: "Orders",
     pendingCount: "Pending",
     progressCount: "In preparation",
+    acceptedCount: "Accepted",
+    revenueCount: "Revenue",
+    avgTicket: "Average ticket",
+    topFoodTitle: "Top food sold",
+    topFoodEmpty: "No accepted sales for this period.",
+    qtySold: "Qty",
+    period_day: "Today",
+    period_week: "Week",
+    period_month: "Month",
     updated: "Status updated",
     staffRole: "Role",
     signOut: "Sign out"
@@ -96,8 +114,10 @@ const staffBadge = document.getElementById("staffBadge");
 const ordersList = document.getElementById("ordersList");
 const reservationsList = document.getElementById("reservationsList");
 const statsGrid = document.getElementById("statsGrid");
+const foodStats = document.getElementById("foodStats");
 const viewButtons = Array.from(document.querySelectorAll(".chip[data-view]"));
 const filterButtons = Array.from(document.querySelectorAll(".chip[data-filter]"));
+const periodButtons = Array.from(document.querySelectorAll(".chip[data-period]"));
 const ordersView = document.getElementById("ordersView");
 const reservationsView = document.getElementById("reservationsView");
 const reviewModal = document.getElementById("reviewModal");
@@ -118,6 +138,7 @@ let currentStaffUser = null;
 let currentStaffProfile = null;
 let ordersCache = [];
 let reservationsCache = [];
+let activePeriod = "day";
 let unsubscribeOrders = null;
 let unsubscribeReservations = null;
 
@@ -145,14 +166,62 @@ function formatDate(value) {
   return date.toLocaleString(lang === "es" ? "es-ES" : "en-US");
 }
 
+function parseDate(value) {
+  if (!value) return null;
+  const date = value.toDate ? value.toDate() : new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function periodStart(now, period) {
+  const start = new Date(now);
+  if (period === "day") {
+    start.setHours(0, 0, 0, 0);
+    return start;
+  }
+  if (period === "week") {
+    const mondayOffset = (start.getDay() + 6) % 7;
+    start.setDate(start.getDate() - mondayOffset);
+    start.setHours(0, 0, 0, 0);
+    return start;
+  }
+  start.setDate(1);
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+function inActivePeriod(value) {
+  const date = parseDate(value);
+  if (!date) return false;
+  const now = new Date();
+  const start = periodStart(now, activePeriod);
+  return date >= start && date <= now;
+}
+
+function salesRowsForPeriod() {
+  return ordersCache.filter((order) => inActivePeriod(order.createdAt));
+}
+
+function reservationsForPeriod() {
+  return reservationsCache.filter((res) => inActivePeriod(res.createdAt));
+}
+
+function acceptedSalesRows() {
+  return salesRowsForPeriod().filter((order) => order.status === "accepted");
+}
+
 function applyI18n() {
   document.documentElement.lang = lang;
   langToggle.textContent = lang === "es" ? "EN" : "ES";
   signOutBtn.textContent = t("signOut");
+  periodButtons.forEach((button) => {
+    const label = t(`period_${button.dataset.period}`);
+    button.textContent = label;
+  });
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     node.textContent = t(node.dataset.i18n);
   });
   renderStats();
+  renderFoodStats();
   renderOrders();
   renderReservations();
 }
@@ -162,13 +231,67 @@ function filteredOrders() {
 }
 
 function renderStats() {
-  const pending = ordersCache.filter((o) => o.status === "pending").length;
-  const progress = ordersCache.filter((o) => o.status === "in_progress").length;
+  const periodOrders = salesRowsForPeriod();
+  const periodReservations = reservationsForPeriod();
+  const pending = periodOrders.filter((o) => o.status === "pending").length;
+  const progress = periodOrders.filter((o) => o.status === "in_progress").length;
+  const acceptedOrders = periodOrders.filter((o) => o.status === "accepted");
+  const revenue = acceptedOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+  const avgTicket = acceptedOrders.length ? revenue / acceptedOrders.length : 0;
   statsGrid.innerHTML = `
-    <article class="stat-card"><p>${t("ordersCount")}</p><h3>${ordersCache.length}</h3></article>
+    <article class="stat-card"><p>${t("ordersCount")} (${t(`period_${activePeriod}`)})</p><h3>${periodOrders.length}</h3></article>
     <article class="stat-card"><p>${t("pendingCount")}</p><h3>${pending}</h3></article>
     <article class="stat-card"><p>${t("progressCount")}</p><h3>${progress}</h3></article>
-    <article class="stat-card"><p>${t("reservationsCount")}</p><h3>${reservationsCache.length}</h3></article>
+    <article class="stat-card"><p>${t("acceptedCount")}</p><h3>${acceptedOrders.length}</h3></article>
+    <article class="stat-card"><p>${t("reservationsCount")} (${t(`period_${activePeriod}`)})</p><h3>${periodReservations.length}</h3></article>
+    <article class="stat-card"><p>${t("revenueCount")} (${t(`period_${activePeriod}`)})</p><h3>${money(revenue)}</h3></article>
+    <article class="stat-card"><p>${t("avgTicket")}</p><h3>${money(avgTicket)}</h3></article>
+  `;
+}
+
+function foodName(item) {
+  return item.title?.[lang] || item.title?.es || item.title?.en || "Item";
+}
+
+function renderFoodStats() {
+  const acceptedOrders = acceptedSalesRows();
+  const byFood = new Map();
+
+  acceptedOrders.forEach((order) => {
+    (order.items || []).forEach((item) => {
+      const key = item.id || foodName(item);
+      const existing = byFood.get(key) || { name: foodName(item), qty: 0, sales: 0 };
+      const qty = Number(item.qty || 0);
+      const lineTotal = qty * Number(item.price || 0);
+      existing.qty += qty;
+      existing.sales += lineTotal;
+      byFood.set(key, existing);
+    });
+  });
+
+  const topRows = Array.from(byFood.values()).sort((a, b) => b.qty - a.qty).slice(0, 8);
+  if (!topRows.length) {
+    foodStats.innerHTML = `
+      <article class="food-stats-card">
+        <h3>${t("topFoodTitle")} (${t(`period_${activePeriod}`)})</h3>
+        <p>${t("topFoodEmpty")}</p>
+      </article>
+    `;
+    return;
+  }
+
+  foodStats.innerHTML = `
+    <article class="food-stats-card">
+      <h3>${t("topFoodTitle")} (${t(`period_${activePeriod}`)})</h3>
+      <ul>
+        ${topRows
+          .map(
+            (row) =>
+              `<li><span>${row.name}</span><strong>${t("qtySold")}: ${row.qty} | ${money(row.sales)}</strong></li>`
+          )
+          .join("")}
+      </ul>
+    </article>
   `;
 }
 
@@ -274,6 +397,7 @@ function startRealtime() {
     (orders) => {
       ordersCache = orders;
       renderStats();
+      renderFoodStats();
       renderOrders();
       if (selectedOrderId) openReview(selectedOrderId);
     },
@@ -346,6 +470,16 @@ filterButtons.forEach((button) => {
     button.classList.add("active");
     activeFilter = button.dataset.filter;
     renderOrders();
+  });
+});
+
+periodButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    periodButtons.forEach((b) => b.classList.remove("active"));
+    button.classList.add("active");
+    activePeriod = button.dataset.period;
+    renderStats();
+    renderFoodStats();
   });
 });
 

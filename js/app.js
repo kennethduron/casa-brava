@@ -194,6 +194,12 @@ const menuItems = [
   { id: "d9", category: "desserts", title: { es: "Fruta fresca", en: "Fresh fruit" }, price: 5.0 },
   { id: "d10", category: "desserts", title: { es: "Coulant de cacao", en: "Chocolate coulant" }, price: 8.0 }
 ];
+const categoryImageMap = {
+  appetizers: "assets/entradas.svg",
+  main_courses: "assets/principales.svg",
+  beverages: "assets/bebidas.svg",
+  desserts: "assets/postres.svg"
+};
 
 const menuGrid = document.getElementById("menuGrid");
 const tabs = Array.from(document.querySelectorAll(".chip[data-category]"));
@@ -262,13 +268,24 @@ function filteredMenu() {
   return menuItems.filter((item) => (activeCategory === "all" ? true : item.category === activeCategory));
 }
 
+function categoryLabel(category) {
+  return String(category || "").replace(/_/g, " ");
+}
+
+function itemImage(item) {
+  return item.image || categoryImageMap[item.category] || "assets/food.svg";
+}
+
 function renderMenu() {
   const items = filteredMenu();
   menuGrid.innerHTML = items
     .map((item) => `
       <article class="menu-card">
+        <figure class="menu-photo-wrap">
+          <img class="menu-photo" src="${itemImage(item)}" alt="${item.title[lang]}" loading="lazy">
+        </figure>
         <h3>${item.title[lang]}</h3>
-        <p>${item.category.replace("_", " ")}</p>
+        <p class="menu-category">${categoryLabel(item.category)}</p>
         <div class="meta">
           <span class="price">${money(item.price)}</span>
           <button class="btn btn-primary add-item" data-id="${item.id}">${t("add")}</button>
