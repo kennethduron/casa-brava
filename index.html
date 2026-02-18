@@ -45,7 +45,11 @@
     <header class="site-header">
         <div class="container nav-wrap">
             <a class="brand" href="#inicio">Casa Brava</a>
-            <nav aria-label="Primary navigation">
+            <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="primaryNav"
+                aria-label="Abrir menu">
+                &#9776;
+            </button>
+            <nav id="primaryNav" aria-label="Primary navigation">
                 <ul class="nav-list">
                     <li><a href="#menu" data-i18n="navMenu">Menu</a></li>
                     <li><a href="#pedido" data-i18n="navOrder">Pedido</a></li>

@@ -216,6 +216,8 @@ const toast = document.getElementById("toast");
 const tracker = document.getElementById("orderTracker");
 const reservationForm = document.getElementById("reservationForm");
 const langToggle = document.getElementById("langToggle");
+const navToggle = document.getElementById("navToggle");
+const primaryNav = document.getElementById("primaryNav");
 
 let lang = "es";
 let activeCategory = "all";
@@ -460,6 +462,20 @@ langToggle.addEventListener("click", () => {
   lang = lang === "es" ? "en" : "es";
   applyI18n();
 });
+
+if (navToggle && primaryNav) {
+  navToggle.addEventListener("click", () => {
+    const isOpen = primaryNav.classList.toggle("open");
+    navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
+
+  primaryNav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      primaryNav.classList.remove("open");
+      navToggle.setAttribute("aria-expanded", "false");
+    });
+  });
+}
 
 cartBtn.addEventListener("click", openDrawer);
 closeCart.addEventListener("click", closeDrawer);
