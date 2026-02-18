@@ -15,6 +15,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -157,6 +158,10 @@ async function signInWithGooglePopup() {
   return res.user;
 }
 
+async function signInWithGoogleRedirect() {
+  await signInWithRedirect(auth, googleProvider);
+}
+
 function onAuthChange(cb) {
   return onAuthStateChanged(auth, cb);
 }
@@ -178,6 +183,7 @@ export {
   getStaffProfile,
   isStaffAuthorized,
   signInWithGooglePopup,
+  signInWithGoogleRedirect,
   onAuthChange,
   signOutUser
 };

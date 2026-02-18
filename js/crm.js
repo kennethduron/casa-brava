@@ -3,6 +3,7 @@
   listenReservations,
   updateOrderStatus,
   signInWithGooglePopup,
+  signInWithGoogleRedirect,
   onAuthChange,
   signOutUser,
   isStaffAuthorized
@@ -355,10 +356,31 @@ langToggle.addEventListener("click", () => {
 
 signInBtn.addEventListener("click", async () => {
   authMessage.textContent = t("authChecking");
+  if (window.location.protocol === "file:") {
+    authMessage.textContent = "Use http://localhost:3000/crm.html (not file://)";
+    return;
+  }
   try {
     await signInWithGooglePopup();
-  } catch (_e) {
-    authMessage.textContent = "Sign-in error";
+  } catch (error) {
+    const code = error && error.code ? error.code : "unknown";
+    const fallbackCodes = [
+      "auth/popup-blocked",
+      "auth/popup-closed-by-user",
+      "auth/cancelled-popup-request"
+    ];
+    if (fallbackCodes.includes(code)) {
+      authMessage.textContent = "Popup blocked. Redirecting to Google sign-in...";
+      try {
+        await signInWithGoogleRedirect();
+        return;
+      } catch (redirectError) {
+        const redirectCode = redirectError && redirectError.code ? redirectError.code : "unknown";
+        authMessage.textContent = `Sign-in failed (${redirectCode})`;
+        return;
+      }
+    }
+    authMessage.textContent = `Sign-in failed (${code})`;
   }
 });
 
