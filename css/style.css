@@ -792,6 +792,13 @@ textarea:focus {
     justify-content: center;
   }
 
+  #langToggle,
+  #crmLangToggle {
+    padding: 6px 9px;
+    font-size: 0.82rem;
+    min-width: 52px;
+  }
+
   .menu-tabs {
     overflow-x: auto;
     flex-wrap: nowrap;
@@ -850,8 +857,33 @@ textarea:focus {
   }
 
   .hero-actions .btn,
-  .cart-actions .btn {
+  .cart-actions .btn,
+  .crm-head-actions .btn {
     width: auto;
+  }
+
+  .crm-head-actions {
+    gap: 6px;
+  }
+
+  #langToggle,
+  #crmLangToggle {
+    padding: 5px 8px;
+    font-size: 0.78rem;
+    min-width: 46px;
+  }
+
+  .crm-top {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .crm-top .badge {
+    align-self: flex-start;
+  }
+
+  .modal-card .cart-actions .btn {
+    width: 100%;
   }
 
   .cart-floating {

@@ -54,7 +54,8 @@ const i18n = {
     period_month: "Mes",
     updated: "Estado actualizado",
     staffRole: "Rol",
-    signOut: "Salir"
+    signOut: "Cerrar sesion",
+    signOutShort: "Salir"
   },
   en: {
     authTitle: "Staff CRM access",
@@ -100,7 +101,8 @@ const i18n = {
     period_month: "Month",
     updated: "Status updated",
     staffRole: "Role",
-    signOut: "Sign out"
+    signOut: "Sign out",
+    signOutShort: "Out"
   }
 };
 
@@ -212,7 +214,8 @@ function acceptedSalesRows() {
 function applyI18n() {
   document.documentElement.lang = lang;
   langToggle.textContent = lang === "es" ? "EN" : "ES";
-  signOutBtn.textContent = t("signOut");
+  const shortLabel = window.matchMedia("(max-width: 560px)").matches;
+  signOutBtn.textContent = shortLabel ? t("signOutShort") : t("signOut");
   periodButtons.forEach((button) => {
     const label = t(`period_${button.dataset.period}`);
     button.textContent = label;
@@ -487,6 +490,8 @@ langToggle.addEventListener("click", () => {
   lang = lang === "es" ? "en" : "es";
   applyI18n();
 });
+
+window.addEventListener("resize", applyI18n);
 
 signInBtn.addEventListener("click", async () => {
   authMessage.textContent = t("authChecking");
