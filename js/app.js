@@ -157,7 +157,7 @@ const i18n = {
 // Example:
 // { id: "a1", ..., price: 8.5, image: "assets/menu/bruschetta.jpg" }
 const menuItems = [
-  { id: "a1", category: "appetizers", title: { es: "Bruschetta clasica", en: "Classic bruschetta" }, price: 8.5 },
+  { id: "a1", category: "appetizers", title: { es: "Bruschetta clasica", en: "Classic bruschetta" }, price: 8.5, image: "assets/bruschetta-clasica.jpg" },
   { id: "a2", category: "appetizers", title: { es: "Ceviche de pescado", en: "Fish ceviche" }, price: 11.5 },
   { id: "a3", category: "appetizers", title: { es: "Carpaccio de res", en: "Beef carpaccio" }, price: 12.0 },
   { id: "a4", category: "appetizers", title: { es: "Croquetas de queso", en: "Cheese croquettes" }, price: 7.5 },
