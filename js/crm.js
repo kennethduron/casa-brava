@@ -46,9 +46,13 @@ const i18n = {
     acceptedCount: "Aceptados",
     revenueCount: "Ingresos",
     avgTicket: "Ticket promedio",
+    statsSummary: "Resumen",
+    statsOps: "Operacion",
+    statsSales: "Ventas",
     topFoodTitle: "Top comida vendida",
     topFoodEmpty: "No hay ventas aceptadas para este periodo.",
     qtySold: "Cantidad",
+    salesLabel: "Ventas",
     period_day: "Hoy",
     period_week: "Semana",
     period_month: "Mes",
@@ -93,9 +97,13 @@ const i18n = {
     acceptedCount: "Accepted",
     revenueCount: "Revenue",
     avgTicket: "Average ticket",
+    statsSummary: "Summary",
+    statsOps: "Operations",
+    statsSales: "Sales",
     topFoodTitle: "Top food sold",
     topFoodEmpty: "No accepted sales for this period.",
     qtySold: "Qty",
+    salesLabel: "Sales",
     period_day: "Today",
     period_week: "Week",
     period_month: "Month",
@@ -242,13 +250,30 @@ function renderStats() {
   const revenue = acceptedOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
   const avgTicket = acceptedOrders.length ? revenue / acceptedOrders.length : 0;
   statsGrid.innerHTML = `
-    <article class="stat-card"><p>${t("ordersCount")} (${t(`period_${activePeriod}`)})</p><h3>${periodOrders.length}</h3></article>
-    <article class="stat-card"><p>${t("pendingCount")}</p><h3>${pending}</h3></article>
-    <article class="stat-card"><p>${t("progressCount")}</p><h3>${progress}</h3></article>
-    <article class="stat-card"><p>${t("acceptedCount")}</p><h3>${acceptedOrders.length}</h3></article>
-    <article class="stat-card"><p>${t("reservationsCount")} (${t(`period_${activePeriod}`)})</p><h3>${periodReservations.length}</h3></article>
-    <article class="stat-card"><p>${t("revenueCount")} (${t(`period_${activePeriod}`)})</p><h3>${money(revenue)}</h3></article>
-    <article class="stat-card"><p>${t("avgTicket")}</p><h3>${money(avgTicket)}</h3></article>
+    <article class="stats-panel-card">
+      <header class="stats-panel-head">
+        <h3>${t("statsSummary")} (${t(`period_${activePeriod}`)})</h3>
+      </header>
+      <div class="stats-groups">
+        <section class="stats-group">
+          <h4>${t("statsOps")}</h4>
+          <div class="stats-subgrid">
+            <article class="stat-card tone-neutral"><p>${t("ordersCount")}</p><h3>${periodOrders.length}</h3></article>
+            <article class="stat-card tone-warn"><p>${t("pendingCount")}</p><h3>${pending}</h3></article>
+            <article class="stat-card tone-progress"><p>${t("progressCount")}</p><h3>${progress}</h3></article>
+            <article class="stat-card tone-ok"><p>${t("acceptedCount")}</p><h3>${acceptedOrders.length}</h3></article>
+            <article class="stat-card tone-neutral"><p>${t("reservationsCount")}</p><h3>${periodReservations.length}</h3></article>
+          </div>
+        </section>
+        <section class="stats-group">
+          <h4>${t("statsSales")}</h4>
+          <div class="stats-subgrid stats-subgrid-sales">
+            <article class="stat-card tone-sales"><p>${t("revenueCount")}</p><h3>${money(revenue)}</h3></article>
+            <article class="stat-card tone-sales-soft"><p>${t("avgTicket")}</p><h3>${money(avgTicket)}</h3></article>
+          </div>
+        </section>
+      </div>
+    </article>
   `;
 }
 
@@ -288,10 +313,16 @@ function renderFoodStats() {
       <h3>${t("topFoodTitle")} (${t(`period_${activePeriod}`)})</h3>
       <ul>
         ${topRows
-          .map(
-            (row) =>
-              `<li><span>${row.name}</span><strong>${t("qtySold")}: ${row.qty} | ${money(row.sales)}</strong></li>`
-          )
+          .map((row, index) => `
+            <li>
+              <span class="food-rank">#${index + 1}</span>
+              <span class="food-name">${row.name}</span>
+              <span class="food-metrics">
+                <em>${t("qtySold")}: ${row.qty}</em>
+                <strong>${t("salesLabel")}: ${money(row.sales)}</strong>
+              </span>
+            </li>
+          `)
           .join("")}
       </ul>
     </article>

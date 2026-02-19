@@ -577,10 +577,45 @@ textarea:focus {
 }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 12px;
+  display: block;
   margin-bottom: 16px;
+}
+
+.stats-panel-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(31, 24, 12, 0.05);
+}
+
+.stats-panel-head h3 {
+  margin: 0;
+}
+
+.stats-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.stats-group h4 {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stats-subgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.stats-subgrid-sales {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .stat-card {
@@ -588,6 +623,53 @@ textarea:focus {
   border-radius: 10px;
   padding: 12px;
   background: var(--surface);
+}
+
+.stat-card.tone-neutral {
+  border-color: #dbcab6;
+  background: linear-gradient(180deg, #fffdf8, #fff8ef);
+}
+
+.stat-card.tone-warn {
+  border-color: #efcc91;
+  background: linear-gradient(180deg, #fff8ea, #fff0d4);
+}
+
+.stat-card.tone-progress {
+  border-color: #f2d29f;
+  background: linear-gradient(180deg, #fff8e9, #ffeecf);
+}
+
+.stat-card.tone-ok {
+  border-color: #bfe2d5;
+  background: linear-gradient(180deg, #f3fbf7, #e4f6ef);
+}
+
+.stat-card.tone-sales {
+  border-color: #c8d8ef;
+  background: linear-gradient(180deg, #f5f9ff, #e7f0ff);
+}
+
+.stat-card.tone-sales-soft {
+  border-color: #d5def3;
+  background: linear-gradient(180deg, #f8faff, #edf2ff);
+}
+
+.stat-card.tone-warn h3 {
+  color: #8a5600;
+}
+
+.stat-card.tone-progress h3 {
+  color: #8d5c10;
+}
+
+.stat-card.tone-ok h3 {
+  color: #156144;
+}
+
+.stat-card.tone-sales h3,
+.stat-card.tone-sales-soft h3 {
+  color: #204b85;
 }
 
 .stat-card p,
@@ -633,12 +715,34 @@ textarea:focus {
 
 .food-stats-card li {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   gap: 10px;
   border: 1px dashed #e2d1bf;
   border-radius: 9px;
   padding: 8px 10px;
+}
+
+.food-rank {
+  min-width: 32px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.food-name {
+  flex: 1;
+}
+
+.food-metrics {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.food-metrics em {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .crm-grid {
@@ -734,7 +838,6 @@ textarea:focus {
   .hero-grid,
   .strip,
   .about-grid,
-  .stats-grid,
   .reservation-form {
     grid-template-columns: 1fr;
   }
@@ -753,17 +856,25 @@ textarea:focus {
 
   .nav-wrap {
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 10px;
   }
 
+  .brand {
+    order: 1;
+  }
+
   .nav-toggle {
+    order: 3;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    min-width: 46px;
+    min-height: 38px;
   }
 
   .site-header nav {
+    order: 4;
     width: 100%;
     display: none;
   }
@@ -788,11 +899,24 @@ textarea:focus {
   }
 
   .crm-head-actions {
-    width: 100%;
-    justify-content: center;
+    width: auto;
+    justify-content: flex-end;
+    margin-left: auto;
   }
 
-  #langToggle,
+  #langToggle {
+    order: 2;
+    margin-left: auto;
+    width: auto;
+    min-width: 46px;
+    min-height: 38px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #dac6af;
+    background: var(--surface);
+  }
+
   #crmLangToggle {
     padding: 6px 9px;
     font-size: 0.82rem;
@@ -814,6 +938,10 @@ textarea:focus {
     align-items: stretch;
   }
 
+  .stats-groups {
+    grid-template-columns: 1fr;
+  }
+
   .crm-actions .btn {
     flex: 1 1 calc(50% - 8px);
     min-width: 130px;
@@ -822,6 +950,11 @@ textarea:focus {
   .food-stats-card li {
     flex-direction: column;
     gap: 4px;
+    align-items: flex-start;
+  }
+
+  .food-metrics {
+    align-items: flex-start;
   }
 
   .cart-drawer {
@@ -864,6 +997,7 @@ textarea:focus {
 
   .crm-head-actions {
     gap: 6px;
+    margin-left: auto;
   }
 
   #langToggle,
@@ -871,6 +1005,13 @@ textarea:focus {
     padding: 5px 8px;
     font-size: 0.78rem;
     min-width: 46px;
+  }
+
+  #langToggle {
+    width: auto;
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
 
   .crm-top {
