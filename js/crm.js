@@ -157,7 +157,11 @@ function t(key) {
 }
 
 function money(v) {
-  return `$${Number(v || 0).toFixed(2)}`;
+  return new Intl.NumberFormat(lang === "es" ? "es-HN" : "en-US", {
+    style: "currency",
+    currency: "HNL",
+    minimumFractionDigits: 2
+  }).format(Number(v || 0));
 }
 
 function showToast(message) {

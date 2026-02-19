@@ -152,6 +152,10 @@ const i18n = {
   }
 };
 
+// Optional per-item image:
+// Add `image: "assets/menu/your-photo.jpg"` inside any item below.
+// Example:
+// { id: "a1", ..., price: 8.5, image: "assets/menu/bruschetta.jpg" }
 const menuItems = [
   { id: "a1", category: "appetizers", title: { es: "Bruschetta clasica", en: "Classic bruschetta" }, price: 8.5 },
   { id: "a2", category: "appetizers", title: { es: "Ceviche de pescado", en: "Fish ceviche" }, price: 11.5 },
@@ -242,7 +246,11 @@ function t(key) {
 }
 
 function money(v) {
-  return `$${Number(v).toFixed(2)}`;
+  return new Intl.NumberFormat(lang === "es" ? "es-HN" : "en-US", {
+    style: "currency",
+    currency: "HNL",
+    minimumFractionDigits: 2
+  }).format(Number(v || 0));
 }
 
 function showToast(message) {
