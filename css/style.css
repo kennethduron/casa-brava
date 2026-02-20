@@ -1027,6 +1027,10 @@ textarea:focus {
     width: 100%;
   }
 
+  .modal-card header .btn {
+    width: auto;
+  }
+
   .cart-floating {
     right: 12px;
     bottom: 12px;
@@ -1041,6 +1045,45 @@ textarea:focus {
     padding: 12px;
   }
 }
+
+@media (max-width: 860px) {
+  .crm-page .nav-wrap {
+    flex-wrap: nowrap;
+  }
+
+  .crm-page .brand {
+    min-width: 0;
+    max-width: calc(100% - 132px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .crm-page .menu-tabs {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 560px) {
+  .crm-page .auth-gate {
+    padding: 14px;
+  }
+
+  .crm-page .menu-tabs {
+    margin: 12px 0;
+  }
+
+  .crm-page .chip {
+    padding: 8px 11px;
+    font-size: 0.88rem;
+  }
+
+  .crm-page .crm-actions .btn {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
+
 .auth-gate {
   border: 1px solid var(--border);
   border-radius: 12px;
