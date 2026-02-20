@@ -155,6 +155,20 @@ async function signInWithEmailPassword(email, password) {
   return res.user;
 }
 
+function normalizeUsername(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+async function getEmailByUsername(username) {
+  const normalized = normalizeUsername(username);
+  if (!normalized) return null;
+  const ref = doc(db, "usernames", normalized);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return null;
+  const email = String(snap.data().email || "").trim();
+  return email || null;
+}
+
 function onAuthChange(cb) {
   return onAuthStateChanged(auth, cb);
 }
@@ -176,6 +190,7 @@ export {
   getStaffProfile,
   isStaffAuthorized,
   signInWithEmailPassword,
+  getEmailByUsername,
   onAuthChange,
   signOutUser
 };

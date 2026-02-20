@@ -3,6 +3,7 @@
   listenReservations,
   updateOrderStatus,
   signInWithEmailPassword,
+  getEmailByUsername,
   onAuthChange,
   signOutUser,
   isStaffAuthorized
@@ -12,10 +13,11 @@ const i18n = {
   es: {
     authTitle: "Acceso CRM del personal",
     authText: "Ingresa con usuario y contrasena para validar rol de representante.",
-    authUserLabel: "Usuario (correo)",
+    authUserLabel: "Usuario",
     authPassLabel: "Contrasena",
     authButton: "Ingresar",
     authInvalid: "Usuario o contrasena invalidos.",
+    authUserNotFound: "Usuario no encontrado.",
     authDenied: "Tu usuario no tiene permisos CRM. Contacta al administrador.",
     authChecking: "Validando acceso...",
     crmTitle: "Panel de pedidos y reservas",
@@ -66,10 +68,11 @@ const i18n = {
   en: {
     authTitle: "Staff CRM access",
     authText: "Sign in with username and password to validate representative role.",
-    authUserLabel: "Username (email)",
+    authUserLabel: "Username",
     authPassLabel: "Password",
     authButton: "Sign in",
     authInvalid: "Invalid username or password.",
+    authUserNotFound: "Username not found.",
     authDenied: "Your user does not have CRM permissions. Contact the admin.",
     authChecking: "Validating access...",
     crmTitle: "Orders and reservations dashboard",
@@ -547,7 +550,12 @@ authForm.addEventListener("submit", async (event) => {
 
   authMessage.textContent = t("authChecking");
   try {
-    await signInWithEmailPassword(username, password);
+    const email = username.includes("@") ? username : await getEmailByUsername(username);
+    if (!email) {
+      authMessage.textContent = t("authUserNotFound");
+      return;
+    }
+    await signInWithEmailPassword(email, password);
     authPassword.value = "";
   } catch (error) {
     const code = error && error.code ? error.code : "unknown";
