@@ -13,9 +13,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import {
   getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithRedirect,
+  signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
@@ -33,7 +31,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
 
 function normalizeOrderInput(order) {
   return {
@@ -153,13 +150,9 @@ async function isStaffAuthorized(user) {
   return { allowed: true, profile };
 }
 
-async function signInWithGooglePopup() {
-  const res = await signInWithPopup(auth, googleProvider);
+async function signInWithEmailPassword(email, password) {
+  const res = await signInWithEmailAndPassword(auth, email, password);
   return res.user;
-}
-
-async function signInWithGoogleRedirect() {
-  await signInWithRedirect(auth, googleProvider);
 }
 
 function onAuthChange(cb) {
@@ -182,8 +175,7 @@ export {
   updateOrderStatus,
   getStaffProfile,
   isStaffAuthorized,
-  signInWithGooglePopup,
-  signInWithGoogleRedirect,
+  signInWithEmailPassword,
   onAuthChange,
   signOutUser
 };

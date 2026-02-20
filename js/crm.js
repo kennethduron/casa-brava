@@ -2,8 +2,7 @@
   listenOrders,
   listenReservations,
   updateOrderStatus,
-  signInWithGooglePopup,
-  signInWithGoogleRedirect,
+  signInWithEmailPassword,
   onAuthChange,
   signOutUser,
   isStaffAuthorized
@@ -12,8 +11,11 @@
 const i18n = {
   es: {
     authTitle: "Acceso CRM del personal",
-    authText: "Inicia sesion con Google y valida rol de representante.",
-    authButton: "Ingresar con Google",
+    authText: "Ingresa con usuario y contrasena para validar rol de representante.",
+    authUserLabel: "Usuario (correo)",
+    authPassLabel: "Contrasena",
+    authButton: "Ingresar",
+    authInvalid: "Usuario o contrasena invalidos.",
     authDenied: "Tu usuario no tiene permisos CRM. Contacta al administrador.",
     authChecking: "Validando acceso...",
     crmTitle: "Panel de pedidos y reservas",
@@ -63,8 +65,11 @@ const i18n = {
   },
   en: {
     authTitle: "Staff CRM access",
-    authText: "Sign in with Google and validate representative role.",
-    authButton: "Sign in with Google",
+    authText: "Sign in with username and password to validate representative role.",
+    authUserLabel: "Username (email)",
+    authPassLabel: "Password",
+    authButton: "Sign in",
+    authInvalid: "Invalid username or password.",
     authDenied: "Your user does not have CRM permissions. Contact the admin.",
     authChecking: "Validating access...",
     crmTitle: "Orders and reservations dashboard",
@@ -116,7 +121,9 @@ const i18n = {
 
 const authGate = document.getElementById("authGate");
 const authMessage = document.getElementById("authMessage");
-const signInBtn = document.getElementById("crmSignIn");
+const authForm = document.getElementById("crmAuthForm");
+const authUser = document.getElementById("crmUser");
+const authPassword = document.getElementById("crmPassword");
 const signOutBtn = document.getElementById("crmSignOut");
 const crmApp = document.getElementById("crmApp");
 const staffBadge = document.getElementById("staffBadge");
@@ -528,31 +535,25 @@ langToggle.addEventListener("click", () => {
 
 window.addEventListener("resize", applyI18n);
 
-signInBtn.addEventListener("click", async () => {
-  authMessage.textContent = t("authChecking");
-  if (window.location.protocol === "file:") {
-    authMessage.textContent = "Use http://localhost:3000/crm.html (not file://)";
+authForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const username = authUser.value.trim();
+  const password = authPassword.value;
+
+  if (!username || !password) {
+    authMessage.textContent = t("authInvalid");
     return;
   }
+
+  authMessage.textContent = t("authChecking");
   try {
-    await signInWithGooglePopup();
+    await signInWithEmailPassword(username, password);
+    authPassword.value = "";
   } catch (error) {
     const code = error && error.code ? error.code : "unknown";
-    const fallbackCodes = [
-      "auth/popup-blocked",
-      "auth/popup-closed-by-user",
-      "auth/cancelled-popup-request"
-    ];
-    if (fallbackCodes.includes(code)) {
-      authMessage.textContent = "Popup blocked. Redirecting to Google sign-in...";
-      try {
-        await signInWithGoogleRedirect();
-        return;
-      } catch (redirectError) {
-        const redirectCode = redirectError && redirectError.code ? redirectError.code : "unknown";
-        authMessage.textContent = `Sign-in failed (${redirectCode})`;
-        return;
-      }
+    if (code === "auth/invalid-credential" || code === "auth/wrong-password" || code === "auth/user-not-found") {
+      authMessage.textContent = t("authInvalid");
+      return;
     }
     authMessage.textContent = `Sign-in failed (${code})`;
   }

@@ -30,8 +30,20 @@
     <main class="container section">
         <section id="authGate" class="auth-gate">
             <h1 data-i18n="authTitle">Acceso CRM del personal</h1>
-            <p data-i18n="authText">Inicia sesion con Google y valida rol de representante.</p>
-            <button id="crmSignIn" class="btn btn-primary" data-i18n="authButton">Ingresar con Google</button>
+            <p data-i18n="authText">Ingresa con usuario y contrasena para validar rol de representante.</p>
+            <form id="crmAuthForm" class="reservation-form" novalidate>
+                <label class="full">
+                    <span data-i18n="authUserLabel">Usuario (correo)</span>
+                    <input id="crmUser" type="email" autocomplete="username" required>
+                </label>
+                <label class="full">
+                    <span data-i18n="authPassLabel">Contrasena</span>
+                    <input id="crmPassword" type="password" autocomplete="current-password" required>
+                </label>
+                <div class="full">
+                    <button id="crmSignIn" type="submit" class="btn btn-primary" data-i18n="authButton">Ingresar</button>
+                </div>
+            </form>
             <p id="authMessage" class="muted-line"></p>
         </section>
 
