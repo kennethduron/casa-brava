@@ -158,9 +158,9 @@ const i18n = {
 // { id: "a1", ..., price: 8.5, image: "assets/menu/bruschetta.jpg" }
 const menuItems = [
   { id: "a1", category: "appetizers", title: { es: "Bruschetta clasica", en: "Classic bruschetta" }, price: 8.5, image: "assets/bruschetta-clasica.jpg" },
-  { id: "a2", category: "appetizers", title: { es: "Ceviche de pescado", en: "Fish ceviche" }, price: 11.5, image: "assets/ceviche-de-pescado.webp" }, 
-  { id: "a3", category: "appetizers", title: { es: "Carpaccio de res", en: "Beef carpaccio" }, price: 12.0 },
-  { id: "a4", category: "appetizers", title: { es: "Croquetas de queso", en: "Cheese croquettes" }, price: 7.5 },
+  { id: "a2", category: "appetizers", title: { es: "Ceviche de pescado", en: "Fish ceviche" }, price: 11.5, image: "assets/ceviche-de-pescado.webp" },
+  { id: "a3", category: "appetizers", title: { es: "Carpaccio de res", en: "Beef carpaccio" }, price: 12.0, image: "assets/menu/carpaccio-de-res.jpg" },
+  { id: "a4", category: "appetizers", title: { es: "Croquetas de queso", en: "Cheese croquettes" }, price: 7.5, image: "assets/menu/croquetas-de-queso.jpg" },
   { id: "a5", category: "appetizers", title: { es: "Empanadas gourmet", en: "Gourmet empanadas" }, price: 8.0 },
   { id: "a6", category: "appetizers", title: { es: "Tartar de atun", en: "Tuna tartare" }, price: 13.0 },
   { id: "a7", category: "appetizers", title: { es: "Ensalada mediterranea", en: "Mediterranean salad" }, price: 9.0 },
