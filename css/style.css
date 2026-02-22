@@ -25,6 +25,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -835,6 +836,7 @@ textarea:focus {
 }
 
 @media (max-width: 860px) {
+
   .hero-grid,
   .strip,
   .about-grid,

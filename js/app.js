@@ -159,8 +159,8 @@ const i18n = {
 const menuItems = [
   { id: "a1", category: "appetizers", title: { es: "Bruschetta clasica", en: "Classic bruschetta" }, price: 8.5, image: "assets/bruschetta-clasica.jpg" },
   { id: "a2", category: "appetizers", title: { es: "Ceviche de pescado", en: "Fish ceviche" }, price: 11.5, image: "assets/ceviche-de-pescado.webp" },
-  { id: "a3", category: "appetizers", title: { es: "Carpaccio de res", en: "Beef carpaccio" }, price: 12.0, image: "assets/menu/carpaccio-de-res.jpg" },
-  { id: "a4", category: "appetizers", title: { es: "Croquetas de queso", en: "Cheese croquettes" }, price: 7.5, image: "assets/menu/croquetas-de-queso.jpg" },
+  { id: "a3", category: "appetizers", title: { es: "Carpaccio de res", en: "Beef carpaccio" }, price: 12.0, image: "assets/carpaccio-de-res.webp" },
+  { id: "a4", category: "appetizers", title: { es: "Croquetas de queso", en: "Cheese croquettes" }, price: 7.5, image: "assets/croquetas-de-queso.jpg" },
   { id: "a5", category: "appetizers", title: { es: "Empanadas gourmet", en: "Gourmet empanadas" }, price: 8.0 },
   { id: "a6", category: "appetizers", title: { es: "Tartar de atun", en: "Tuna tartare" }, price: 13.0 },
   { id: "a7", category: "appetizers", title: { es: "Ensalada mediterranea", en: "Mediterranean salad" }, price: 9.0 },
@@ -204,7 +204,6 @@ const categoryImageMap = {
   beverages: "assets/bebidas.svg",
   desserts: "assets/postres.svg"
 };
-
 const menuGrid = document.getElementById("menuGrid");
 const tabs = Array.from(document.querySelectorAll(".chip[data-category]"));
 const cartBtn = document.getElementById("cartBtn");
@@ -499,3 +498,12 @@ reservationForm.addEventListener("submit", submitReservation);
 const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
+
+
+
+
+
+
+
+
+
