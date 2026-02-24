@@ -173,11 +173,11 @@ const menuItems = [
   { id: "m4", category: "main_courses", title: { es: "Pollo rostizado", en: "Roasted chicken" }, price: 18.0, image: "assets/pollo-rostizado.jpg" },
   { id: "m5", category: "main_courses", title: { es: "Paella de mariscos", en: "Seafood paella" }, price: 27.0, image: "assets/paella-de-mariscos.jpg" },
   { id: "m6", category: "main_courses", title: { es: "Lasagna artesanal", en: "Artisan lasagna" }, price: 16.0, image: "assets/lasagna-artesanal.jpg" },
-  { id: "m7", category: "main_courses", title: { es: "Hamburguesa premium", en: "Premium burger" }, price: 15.0. image: "assets/hamburguesa-premium.jpg" },
+  { id: "m7", category: "main_courses", title: { es: "Hamburguesa premium", en: "Premium burger" }, price: 15.0, image: "assets/hamburguesa-premium.jpg" },
   { id: "m8", category: "main_courses", title: { es: "Lomo en salsa", en: "Tenderloin in sauce" }, price: 24.0, image: "assets/lomo-en-salsa.jpg" },
   { id: "m9", category: "main_courses", title: { es: "Arroz meloso", en: "Creamy rice" }, price: 20.0, image: "assets/arroz-meloso.jpg" },
-  { id: "m10", category: "main_courses", title: { es: "Costillas BBQ", en: "BBQ ribs" }, price: 22.0 },
-  { id: "b1", category: "beverages", title: { es: "Agua mineral", en: "Mineral water" }, price: 2.5 },
+  { id: "m10", category: "main_courses", title: { es: "Costillas BBQ", en: "BBQ ribs" }, price: 22.0, image: "assets/costillas-bbq.jpg" },
+  { id: "b1", category: "beverages", title: { es: "Agua mineral", en: "Mineral water" }, price: 2.5, image: "assets/agua-mineral.jpg" },
   { id: "b2", category: "beverages", title: { es: "Limonada natural", en: "Fresh lemonade" }, price: 4.0 },
   { id: "b3", category: "beverages", title: { es: "Jugo verde", en: "Green juice" }, price: 5.0 },
   { id: "b4", category: "beverages", title: { es: "Cafe espresso", en: "Espresso" }, price: 3.0 },
@@ -498,7 +498,6 @@ reservationForm.addEventListener("submit", submitReservation);
 const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
-
 
 
 
