@@ -182,7 +182,7 @@ const menuItems = [
   { id: "b3", category: "beverages", title: { es: "Jugo verde", en: "Green juice" }, price: 5.0, image: "assets/jugo-verde.jpg" },
   { id: "b4", category: "beverages", title: { es: "Cafe espresso", en: "Espresso" }, price: 3.0, image: "assets/cafe-espresso.jpg" },
   { id: "b5", category: "beverages", title: { es: "Te herbal", en: "Herbal tea" }, price: 3.5, image: "assets/te-herbal.jpg" },
-  { id: "b6", category: "beverages", title: { es: "Cerveza artesanal", en: "Craft beer" }, price: 6.0. image: "assets/cerveza-artesanal.jpg" },
+  { id: "b6", category: "beverages", title: { es: "Cerveza artesanal", en: "Craft beer" }, price: 6.0, image: "assets/cerveza-artesanal.jpg" },
   { id: "b7", category: "beverages", title: { es: "Vino tinto copa", en: "Red wine glass" }, price: 8.0 },
   { id: "b8", category: "beverages", title: { es: "Vino blanco copa", en: "White wine glass" }, price: 8.0 },
   { id: "b9", category: "beverages", title: { es: "Coctel de autor", en: "Signature cocktail" }, price: 10.0 },
@@ -498,7 +498,6 @@ reservationForm.addEventListener("submit", submitReservation);
 const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
-
 
 
 
