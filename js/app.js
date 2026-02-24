@@ -175,7 +175,7 @@ const menuItems = [
   { id: "m6", category: "main_courses", title: { es: "Lasagna artesanal", en: "Artisan lasagna" }, price: 16.0, image: "assets/lasagna-artesanal.jpg" },
   { id: "m7", category: "main_courses", title: { es: "Hamburguesa premium", en: "Premium burger" }, price: 15.0. image: "assets/hamburguesa-premium.jpg" },
   { id: "m8", category: "main_courses", title: { es: "Lomo en salsa", en: "Tenderloin in sauce" }, price: 24.0, image: "assets/lomo-en-salsa.jpg" },
-  { id: "m9", category: "main_courses", title: { es: "Arroz meloso", en: "Creamy rice" }, price: 20.0 },
+  { id: "m9", category: "main_courses", title: { es: "Arroz meloso", en: "Creamy rice" }, price: 20.0, image: "assets/arroz-meloso.jpg" },
   { id: "m10", category: "main_courses", title: { es: "Costillas BBQ", en: "BBQ ribs" }, price: 22.0 },
   { id: "b1", category: "beverages", title: { es: "Agua mineral", en: "Mineral water" }, price: 2.5 },
   { id: "b2", category: "beverages", title: { es: "Limonada natural", en: "Fresh lemonade" }, price: 4.0 },
