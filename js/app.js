@@ -226,6 +226,7 @@ let lang = "es";
 let activeCategory = "all";
 let cart = read(STORAGE.cart, []);
 let lastOrderUnsub = null;
+let toastTimer = null;
 
 function read(key, fallback) {
   try {
@@ -252,10 +253,17 @@ function money(v) {
   }).format(Number(v || 0));
 }
 
-function showToast(message) {
+function showToast(message, options = {}) {
+  const { duration = 1700, center = false, highlight = false } = options;
   toast.textContent = message;
+  toast.classList.remove("center", "highlight");
+  if (center) toast.classList.add("center");
+  if (highlight) toast.classList.add("highlight");
   toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 1700);
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show", "center", "highlight");
+  }, duration);
 }
 
 function statusLabel(status) {
@@ -316,7 +324,35 @@ function closeDrawer() {
   overlay.classList.add("hidden");
 }
 
-function addToCart(id) {
+function animateAddToCart(sourceEl, message) {
+  if (!sourceEl || !cartBtn) return;
+
+  const start = sourceEl.getBoundingClientRect();
+  const end = cartBtn.getBoundingClientRect();
+  const badge = document.createElement("div");
+  badge.className = "cart-fly-note";
+  badge.textContent = message;
+  badge.style.left = `${start.left + start.width / 2}px`;
+  badge.style.top = `${start.top + start.height / 2}px`;
+  document.body.appendChild(badge);
+
+  requestAnimationFrame(() => {
+    const dx = end.left + end.width / 2 - (start.left + start.width / 2);
+    const dy = end.top + end.height / 2 - (start.top + start.height / 2);
+    badge.style.transform = `translate(${dx}px, ${dy}px) scale(0.75)`;
+    badge.style.opacity = "0";
+  });
+
+  cartBtn.classList.add("bump");
+  setTimeout(() => cartBtn.classList.remove("bump"), 430);
+  setTimeout(() => badge.remove(), 520);
+}
+
+function showCenterNotice(message) {
+  showToast(message, { duration: 2200, center: true, highlight: true });
+}
+
+function addToCart(id, sourceEl) {
   const item = menuItems.find((m) => m.id === id);
   if (!item) return;
   const row = cart.find((c) => c.id === id);
@@ -324,7 +360,9 @@ function addToCart(id) {
   else cart.push({ id: item.id, title: item.title, price: item.price, qty: 1 });
   write(STORAGE.cart, cart);
   renderCart();
-  showToast(`${item.title[lang]} ${t("addedToCart")}`);
+  const message = `${item.title[lang]} ${t("addedToCart")}`;
+  showToast(message, { highlight: true, duration: 1500 });
+  animateAddToCart(sourceEl, message);
 }
 
 function updateQty(id, delta) {
@@ -401,7 +439,7 @@ async function submitOrder() {
     write(STORAGE.cart, cart);
     renderCart();
     closeDrawer();
-    showToast(t("orderSent"));
+    showCenterNotice(t("orderSent"));
   } catch (_e) {
     showToast(t("orderError"));
   }
@@ -448,7 +486,7 @@ tabs.forEach((tab) => {
 
 menuGrid.addEventListener("click", (event) => {
   const button = event.target.closest(".add-item");
-  if (button) addToCart(button.dataset.id);
+  if (button) addToCart(button.dataset.id, button);
 });
 
 cartItemsEl.addEventListener("click", (event) => {
@@ -498,7 +536,6 @@ reservationForm.addEventListener("submit", submitReservation);
 const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
-
 
 
 

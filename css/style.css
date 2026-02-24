@@ -441,6 +441,10 @@ textarea:focus {
   box-shadow: 0 14px 24px rgba(17, 16, 15, 0.35);
 }
 
+.cart-button.bump {
+  animation: cart-bump 0.42s ease;
+}
+
 .cart-button strong {
   background: #fff;
   color: var(--ink);
@@ -555,17 +559,74 @@ textarea:focus {
   transform: translateX(-50%) translateY(24px);
   background: #1d1b18;
   color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
-  padding: 10px 16px;
+  padding: 11px 18px;
+  font-weight: 700;
+  text-align: center;
+  max-width: min(88vw, 560px);
   opacity: 0;
   pointer-events: none;
   z-index: 120;
   transition: all 0.22s ease;
 }
 
+.toast.highlight {
+  background: linear-gradient(105deg, #2a2622, #12100f);
+  box-shadow: 0 16px 36px rgba(22, 18, 15, 0.42);
+}
+
+.toast.center {
+  left: 50%;
+  top: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%) scale(0.92);
+  border-radius: 14px;
+  padding: 18px 24px;
+  font-size: clamp(1.05rem, 2.8vw, 1.38rem);
+  letter-spacing: 0.01em;
+  min-width: min(90vw, 430px);
+}
+
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.toast.center.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.cart-fly-note {
+  position: fixed;
+  z-index: 125;
+  transform: translate(0, 0) scale(1);
+  opacity: 1;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease;
+  pointer-events: none;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(29, 27, 24, 0.96);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 0.84rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 12px 22px rgba(17, 16, 15, 0.28);
+}
+
+@keyframes cart-bump {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.12);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .hidden {
