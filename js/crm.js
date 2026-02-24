@@ -716,10 +716,10 @@ if (salesCalendar) {
   });
 }
 
-reviewPending.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "pending"));
-reviewProgress.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "in_progress"));
-reviewAccept.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "accepted"));
-reviewReject.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "rejected"));
+if (reviewPending) reviewPending.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "pending"));
+if (reviewProgress) reviewProgress.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "in_progress"));
+if (reviewAccept) reviewAccept.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "accepted"));
+if (reviewReject) reviewReject.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "rejected"));
 closeReview.addEventListener("click", closeReviewModal);
 reviewModal.addEventListener("click", (event) => {
   if (event.target === reviewModal) closeReviewModal();
