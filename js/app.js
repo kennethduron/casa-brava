@@ -196,7 +196,7 @@ const menuItems = [
   { id: "d7", category: "desserts", title: { es: "Creme brulee", en: "Creme brulee" }, price: 7.0, image: "assets/creme-brulee.jpg" },
   { id: "d8", category: "desserts", title: { es: "Mousse de chocolate", en: "Chocolate mousse" }, price: 6.5, image: "assets/mousse-de-chocolate.jpg" },
   { id: "d9", category: "desserts", title: { es: "Fruta fresca", en: "Fresh fruit" }, price: 5.0, image: "assets/fruta-fresca.webp" },
-  { id: "d10", category: "desserts", title: { es: "Coulant de cacao", en: "Chocolate coulant" }, price: 8.0 }
+  { id: "d10", category: "desserts", title: { es: "Coulant de cacao", en: "Chocolate coulant" }, price: 8.0, image: "assets/coulant-de-cacao.jpg" }
 ];
 const categoryImageMap = {
   appetizers: "assets/entradas.svg",
