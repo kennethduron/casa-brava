@@ -178,9 +178,9 @@ const menuItems = [
   { id: "m9", category: "main_courses", title: { es: "Arroz meloso", en: "Creamy rice" }, price: 20.0, image: "assets/arroz-meloso.jpg" },
   { id: "m10", category: "main_courses", title: { es: "Costillas BBQ", en: "BBQ ribs" }, price: 22.0, image: "assets/costillas-bbq.jpg" },
   { id: "b1", category: "beverages", title: { es: "Agua mineral", en: "Mineral water" }, price: 2.5, image: "assets/agua-mineral.jpg" },
-  { id: "b2", category: "beverages", title: { es: "Limonada natural", en: "Fresh lemonade" }, price: 4.0, image: "assets/limonada-natural.jpg" },
-  { id: "b3", category: "beverages", title: { es: "Jugo verde", en: "Green juice" }, price: 5.0, image: "assets/jugo-verde.jpg" },
-  { id: "b4", category: "beverages", title: { es: "Cafe espresso", en: "Espresso" }, price: 3.0, image: "assets/cafe-espresso.jpg" },
+  { id: "b2", category: "beverages", title: { es: "Limonada natural", en: "Fresh lemonade" }, price: 4.0, image: "assets/limonada-natural.webp" },
+  { id: "b3", category: "beverages", title: { es: "Jugo verde", en: "Green juice" }, price: 5.0, image: "assets/jugo-verde.jpeg" },
+  { id: "b4", category: "beverages", title: { es: "Cafe espresso", en: "Espresso" }, price: 3.0, image: "assets/cafe-espresso.webp" },
   { id: "b5", category: "beverages", title: { es: "Te herbal", en: "Herbal tea" }, price: 3.5, image: "assets/te-herbal.jpg" },
   { id: "b6", category: "beverages", title: { es: "Cerveza artesanal", en: "Craft beer" }, price: 6.0, image: "assets/cerveza-artesanal.jpg" },
   { id: "b7", category: "beverages", title: { es: "Vino tinto copa", en: "Red wine glass" }, price: 8.0, image: "assets/vino-tinto-copa.jpg" },
@@ -193,9 +193,9 @@ const menuItems = [
   { id: "d4", category: "desserts", title: { es: "Helado artesanal", en: "Artisan ice cream" }, price: 5.0, image: "assets/helado-artesanal.jpg" },
   { id: "d5", category: "desserts", title: { es: "Flan casero", en: "Homemade flan" }, price: 5.5, image: "assets/flan-casero.jpg" },
   { id: "d6", category: "desserts", title: { es: "Pie de limon", en: "Lemon pie" }, price: 6.0, image: "assets/pie-de-limon.jpg" },
-  { id: "d7", category: "desserts", title: { es: "Creme brulee", en: "Creme brulee" }, price: 7.0 },
-  { id: "d8", category: "desserts", title: { es: "Mousse de chocolate", en: "Chocolate mousse" }, price: 6.5 },
-  { id: "d9", category: "desserts", title: { es: "Fruta fresca", en: "Fresh fruit" }, price: 5.0 },
+  { id: "d7", category: "desserts", title: { es: "Creme brulee", en: "Creme brulee" }, price: 7.0, image: "assets/creme-brulee.jpg" },
+  { id: "d8", category: "desserts", title: { es: "Mousse de chocolate", en: "Chocolate mousse" }, price: 6.5, image: "assets/mousse-de-chocolate.jpg" },
+  { id: "d9", category: "desserts", title: { es: "Fruta fresca", en: "Fresh fruit" }, price: 5.0, image: "assets/fruta-fresca.webp" },
   { id: "d10", category: "desserts", title: { es: "Coulant de cacao", en: "Chocolate coulant" }, price: 8.0 }
 ];
 const categoryImageMap = {
