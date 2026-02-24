@@ -55,6 +55,16 @@ const i18n = {
     statsSales: "Ventas",
     topFoodTitle: "Top comida vendida",
     topFoodEmpty: "No hay ventas aceptadas para este periodo.",
+    calendarTitle: "Calendario de ventas",
+    calendarSub: "Selecciona fecha para revisar ventas entregadas y sus pedidos.",
+    calendarNoSalesMonth: "No hay ventas entregadas en este mes.",
+    calendarNoSalesDay: "No hay ventas entregadas en esta fecha.",
+    calendarOrders: "Pedidos",
+    calendarRevenue: "Ingresos",
+    calendarDetailsTitle: "Detalle del dia",
+    calendarPrev: "Mes anterior",
+    calendarNext: "Mes siguiente",
+    calendarFoodBreakdown: "Comida vendida ese dia",
     qtySold: "Cantidad",
     salesLabel: "Ventas",
     period_day: "Hoy",
@@ -110,6 +120,16 @@ const i18n = {
     statsSales: "Sales",
     topFoodTitle: "Top food sold",
     topFoodEmpty: "No accepted sales for this period.",
+    calendarTitle: "Sales calendar",
+    calendarSub: "Pick a date to review delivered sales and order details.",
+    calendarNoSalesMonth: "No delivered sales in this month.",
+    calendarNoSalesDay: "No delivered sales on this date.",
+    calendarOrders: "Orders",
+    calendarRevenue: "Revenue",
+    calendarDetailsTitle: "Day details",
+    calendarPrev: "Previous month",
+    calendarNext: "Next month",
+    calendarFoodBreakdown: "Food sold that day",
     qtySold: "Qty",
     salesLabel: "Sales",
     period_day: "Today",
@@ -135,6 +155,7 @@ const ordersList = document.getElementById("ordersList");
 const reservationsList = document.getElementById("reservationsList");
 const statsGrid = document.getElementById("statsGrid");
 const foodStats = document.getElementById("foodStats");
+const salesCalendar = document.getElementById("salesCalendar");
 const viewButtons = Array.from(document.querySelectorAll(".chip[data-view]"));
 const filterButtons = Array.from(document.querySelectorAll(".chip[data-filter]"));
 const periodButtons = Array.from(document.querySelectorAll(".chip[data-period]"));
@@ -159,6 +180,13 @@ let currentStaffProfile = null;
 let ordersCache = [];
 let reservationsCache = [];
 let activePeriod = "day";
+let calendarMonth = (() => {
+  const now = new Date();
+  now.setDate(1);
+  now.setHours(0, 0, 0, 0);
+  return now;
+})();
+let selectedCalendarDate = null;
 let unsubscribeOrders = null;
 let unsubscribeReservations = null;
 
@@ -247,6 +275,7 @@ function applyI18n() {
   });
   renderStats();
   renderFoodStats();
+  renderSalesCalendar();
   renderOrders();
   renderReservations();
 }
@@ -295,7 +324,55 @@ function foodName(item) {
   return item.title?.[lang] || item.title?.es || item.title?.en || "Item";
 }
 
+function dayKeyFromDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function monthKeyFromDate(date) {
+  return dayKeyFromDate(date).slice(0, 7);
+}
+
+function monthLabel(date) {
+  return date.toLocaleDateString(lang === "es" ? "es-ES" : "en-US", { month: "long", year: "numeric" });
+}
+
+function timeLabel(value) {
+  const date = parseDate(value);
+  if (!date) return "-";
+  return date.toLocaleTimeString(lang === "es" ? "es-ES" : "en-US", { hour: "2-digit", minute: "2-digit" });
+}
+
+function calendarWeekdayLabels() {
+  return lang === "es"
+    ? ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"]
+    : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+}
+
+function salesByDayForMonth(referenceMonth) {
+  const month = referenceMonth.getMonth();
+  const year = referenceMonth.getFullYear();
+  const map = new Map();
+  ordersCache
+    .filter((order) => order.status === "accepted")
+    .forEach((order) => {
+      const when = parseDate(order.createdAt);
+      if (!when) return;
+      if (when.getMonth() !== month || when.getFullYear() !== year) return;
+      const key = dayKeyFromDate(when);
+      const row = map.get(key) || { orders: [], count: 0, revenue: 0 };
+      row.orders.push(order);
+      row.count += 1;
+      row.revenue += Number(order.total || 0);
+      map.set(key, row);
+    });
+  return map;
+}
+
 function renderFoodStats() {
+  if (!foodStats) return;
   const acceptedOrders = acceptedSalesRows();
   const byFood = new Map();
 
@@ -339,6 +416,132 @@ function renderFoodStats() {
           `)
           .join("")}
       </ul>
+    </article>
+  `;
+}
+
+function renderSalesCalendar() {
+  if (!salesCalendar) return;
+  const monthSales = salesByDayForMonth(calendarMonth);
+  const firstOfMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+  const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
+  const firstDayOffset = (firstOfMonth.getDay() + 6) % 7;
+  const monthKey = monthKeyFromDate(firstOfMonth);
+  const dayCells = [];
+
+  if (!selectedCalendarDate || !selectedCalendarDate.startsWith(monthKey)) {
+    selectedCalendarDate = monthSales.size ? Array.from(monthSales.keys())[0] : `${monthKey}-01`;
+  }
+
+  for (let i = 0; i < firstDayOffset; i += 1) {
+    dayCells.push('<div class="calendar-cell muted" aria-hidden="true"></div>');
+  }
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+    const key = dayKeyFromDate(date);
+    const bucket = monthSales.get(key);
+    const selected = selectedCalendarDate === key ? "selected" : "";
+    const hasSales = bucket ? "has-sales" : "";
+    dayCells.push(`
+      <button class="calendar-cell day ${selected} ${hasSales}" data-calendar-date="${key}">
+        <span class="calendar-day">${day}</span>
+        <span class="calendar-meta">${bucket ? `${bucket.count} ${t("calendarOrders")}` : "-"}</span>
+      </button>
+    `);
+  }
+
+  const selectedBucket = monthSales.get(selectedCalendarDate) || null;
+  const dayFoodRows = (() => {
+    if (!selectedBucket) return [];
+    const byFood = new Map();
+    selectedBucket.orders.forEach((order) => {
+      (order.items || []).forEach((item) => {
+        const key = item.id || foodName(item);
+        const existing = byFood.get(key) || { name: foodName(item), qty: 0, sales: 0 };
+        const qty = Number(item.qty || 0);
+        existing.qty += qty;
+        existing.sales += qty * Number(item.price || 0);
+        byFood.set(key, existing);
+      });
+    });
+    return Array.from(byFood.values()).sort((a, b) => b.qty - a.qty);
+  })();
+  const selectedDateObject = new Date(`${selectedCalendarDate}T00:00:00`);
+  const selectedDateLabel = Number.isNaN(selectedDateObject.getTime())
+    ? selectedCalendarDate
+    : selectedDateObject.toLocaleDateString(lang === "es" ? "es-ES" : "en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+  salesCalendar.innerHTML = `
+    <article class="sales-calendar-card">
+      <header class="sales-calendar-head">
+        <div>
+          <h3>${t("calendarTitle")}</h3>
+          <p>${t("calendarSub")}</p>
+        </div>
+        <div class="sales-calendar-nav">
+          <button class="btn btn-outline" data-calendar-shift="-1" aria-label="${t("calendarPrev")}">&lt;</button>
+          <strong>${monthLabel(calendarMonth)}</strong>
+          <button class="btn btn-outline" data-calendar-shift="1" aria-label="${t("calendarNext")}">&gt;</button>
+        </div>
+      </header>
+      <div class="sales-calendar-grid">
+        ${calendarWeekdayLabels().map((label) => `<div class="calendar-cell weekday">${label}</div>`).join("")}
+        ${dayCells.join("")}
+      </div>
+      ${monthSales.size ? "" : `<p class="calendar-empty-month">${t("calendarNoSalesMonth")}</p>`}
+      <section class="sales-day-details">
+        <h4>${t("calendarDetailsTitle")}: ${selectedDateLabel}</h4>
+        ${
+          selectedBucket
+            ? `
+              <p><strong>${t("calendarOrders")}:</strong> ${selectedBucket.count} | <strong>${t("calendarRevenue")}:</strong> ${money(selectedBucket.revenue)}</p>
+              <div class="sales-day-list">
+                ${selectedBucket.orders
+                  .map(
+                    (order) => `
+                      <article class="sales-day-row">
+                        <div>
+                          <strong>#${order.displayId || order.id.slice(0, 6)}</strong>
+                          <p>${t("customer")}: ${order.customer?.name || "-"} (${order.customer?.phone || "-"})</p>
+                          <p>${timeLabel(order.createdAt)} | ${money(order.total)}</p>
+                        </div>
+                        <button class="btn btn-outline" data-review-order="${order.id}">${t("review")}</button>
+                      </article>
+                    `
+                  )
+                  .join("")}
+              </div>
+              <div class="sales-food-breakdown">
+                <h5>${t("calendarFoodBreakdown")}</h5>
+                ${
+                  dayFoodRows.length
+                    ? `
+                      <ul>
+                        ${dayFoodRows
+                          .map(
+                            (row) => `
+                              <li>
+                                <span>${row.name}</span>
+                                <span>${t("qtySold")}: ${row.qty} | ${t("salesLabel")}: ${money(row.sales)}</span>
+                              </li>
+                            `
+                          )
+                          .join("")}
+                      </ul>
+                    `
+                    : `<p>${t("calendarNoSalesDay")}</p>`
+                }
+              </div>
+            `
+            : `<p>${t("calendarNoSalesDay")}</p>`
+        }
+      </section>
     </article>
   `;
 }
@@ -446,6 +649,7 @@ function startRealtime() {
       ordersCache = orders;
       renderStats();
       renderFoodStats();
+      renderSalesCalendar();
       renderOrders();
       if (selectedOrderId) openReview(selectedOrderId);
     },
@@ -487,6 +691,30 @@ ordersList.addEventListener("click", (event) => {
   const statusButton = event.target.closest(".status-change");
   if (statusButton) setStatus(statusButton.dataset.id, statusButton.dataset.status);
 });
+
+if (salesCalendar) {
+  salesCalendar.addEventListener("click", (event) => {
+    const shiftBtn = event.target.closest("[data-calendar-shift]");
+    if (shiftBtn) {
+      const shift = Number(shiftBtn.dataset.calendarShift || 0);
+      calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + shift, 1);
+      renderSalesCalendar();
+      return;
+    }
+
+    const dayBtn = event.target.closest("[data-calendar-date]");
+    if (dayBtn) {
+      selectedCalendarDate = dayBtn.dataset.calendarDate;
+      renderSalesCalendar();
+      return;
+    }
+
+    const reviewBtn = event.target.closest("[data-review-order]");
+    if (reviewBtn) {
+      openReview(reviewBtn.dataset.reviewOrder);
+    }
+  });
+}
 
 reviewPending.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "pending"));
 reviewProgress.addEventListener("click", () => selectedOrderId && setStatus(selectedOrderId, "in_progress"));

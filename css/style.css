@@ -751,6 +751,19 @@ textarea:focus {
   gap: 10px;
 }
 
+.crm-page #statusFilters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.crm-page #statusFilters .chip {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+
 .food-stats {
   margin-bottom: 16px;
 }
@@ -804,6 +817,195 @@ textarea:focus {
 .food-metrics em {
   font-style: normal;
   color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.sales-calendar {
+  margin-bottom: 16px;
+}
+
+.sales-calendar-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(31, 24, 12, 0.05);
+}
+
+.sales-calendar-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sales-calendar-head h3 {
+  margin: 0 0 6px;
+}
+
+.sales-calendar-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.sales-calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sales-calendar-nav strong {
+  text-transform: capitalize;
+  min-width: 170px;
+  text-align: center;
+}
+
+.sales-calendar-nav .btn {
+  width: auto;
+  min-width: 40px;
+  padding: 8px 10px;
+}
+
+.sales-calendar-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.calendar-cell {
+  border-radius: 9px;
+  min-height: 40px;
+  border: 1px solid #eadcca;
+  background: #fff8ef;
+  padding: 6px;
+}
+
+.calendar-cell.weekday {
+  min-height: 0;
+  background: #f7ede0;
+  color: #6c5c4c;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  border-color: #e8dac7;
+}
+
+.calendar-cell.muted {
+  border-style: dashed;
+  background: #fdf8f1;
+  opacity: 0.45;
+}
+
+.calendar-cell.day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  cursor: pointer;
+  min-height: 74px;
+  text-align: left;
+  color: inherit;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.calendar-cell.day:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 14px rgba(31, 24, 12, 0.08);
+}
+
+.calendar-cell.day.has-sales {
+  border-color: #8ecab4;
+  background: linear-gradient(180deg, #f6fdf9, #edf8f2);
+}
+
+.calendar-cell.day.selected {
+  border-color: #d79c63;
+  background: linear-gradient(180deg, #fff6e8, #ffecd0);
+}
+
+.calendar-day {
+  font-weight: 800;
+}
+
+.calendar-meta {
+  font-size: 0.78rem;
+  color: #5e5a54;
+}
+
+.calendar-empty-month {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.sales-day-details {
+  margin-top: 12px;
+  border-top: 1px dashed #dfcbb6;
+  padding-top: 12px;
+}
+
+.sales-day-details h4 {
+  margin: 0 0 8px;
+  text-transform: capitalize;
+}
+
+.sales-day-details p {
+  margin: 0 0 8px;
+}
+
+.sales-day-list {
+  display: grid;
+  gap: 8px;
+}
+
+.sales-day-row {
+  border: 1px solid #e5d3bf;
+  border-radius: 10px;
+  background: #fff9f1;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.sales-day-row p {
+  margin: 2px 0 0;
+  color: #6b6359;
+  font-size: 0.9rem;
+}
+
+.sales-food-breakdown {
+  margin-top: 10px;
+  border-top: 1px dashed #e1cfbb;
+  padding-top: 10px;
+}
+
+.sales-food-breakdown h5 {
+  margin: 0 0 8px;
+}
+
+.sales-food-breakdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.sales-food-breakdown li {
+  border: 1px solid #e7d6c3;
+  background: #fff8ef;
+  border-radius: 9px;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sales-food-breakdown li span:last-child {
+  color: #5f5a53;
   font-size: 0.9rem;
 }
 
@@ -996,15 +1198,13 @@ textarea:focus {
     flex: 0 0 auto;
   }
 
-  #statusFilters {
-    overflow-x: visible;
-    flex-wrap: wrap;
+  .crm-page #statusFilters {
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
     gap: 8px;
   }
 
-  #statusFilters .chip {
-    flex: 1 1 calc(50% - 8px);
-    min-width: 132px;
+  .crm-page #statusFilters .chip {
+    min-width: 0;
     text-align: center;
   }
 
@@ -1029,6 +1229,25 @@ textarea:focus {
   }
 
   .food-metrics {
+    align-items: flex-start;
+  }
+
+  .sales-calendar-nav strong {
+    min-width: 140px;
+    font-size: 0.92rem;
+  }
+
+  .calendar-cell.day {
+    min-height: 68px;
+  }
+
+  .sales-day-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sales-food-breakdown li {
+    flex-direction: column;
     align-items: flex-start;
   }
 
@@ -1098,6 +1317,19 @@ textarea:focus {
     align-self: flex-start;
   }
 
+  .sales-calendar-grid {
+    gap: 4px;
+  }
+
+  .calendar-cell.day {
+    min-height: 62px;
+    padding: 5px;
+  }
+
+  .calendar-meta {
+    font-size: 0.72rem;
+  }
+
   .modal-card .cart-actions .btn {
     width: 100%;
   }
@@ -1153,9 +1385,12 @@ textarea:focus {
     font-size: 0.88rem;
   }
 
-  #statusFilters .chip {
-    flex: 1 1 calc(33.333% - 8px);
-    min-width: 96px;
+  .crm-page #statusFilters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .crm-page #statusFilters .chip {
+    min-width: 0;
     padding: 7px 8px;
     font-size: 0.8rem;
   }
