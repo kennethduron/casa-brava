@@ -189,6 +189,8 @@ let calendarMonth = (() => {
 let selectedCalendarDate = null;
 let unsubscribeOrders = null;
 let unsubscribeReservations = null;
+let hasSeenInitialOrdersSnapshot = false;
+let knownOrderIds = new Set();
 
 function t(key) {
   return (i18n[lang] && i18n[lang][key]) || key;
@@ -206,6 +208,40 @@ function showToast(message) {
   toast.textContent = message;
   toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 1600);
+}
+
+function canUseBrowserNotifications() {
+  return typeof window !== "undefined" && "Notification" in window;
+}
+
+async function ensureNotificationPermission() {
+  if (!canUseBrowserNotifications()) return "unsupported";
+  if (Notification.permission === "granted") return "granted";
+  if (Notification.permission === "denied") return "denied";
+  try {
+    return await Notification.requestPermission();
+  } catch (_e) {
+    return "denied";
+  }
+}
+
+function notifyNewOrder(order) {
+  const orderRef = `#${order.displayId || order.id.slice(0, 6)}`;
+  const customerName = order.customer?.name || "-";
+  const totalText = money(order.total);
+  const title = lang === "es" ? "Nuevo pedido recibido" : "New order received";
+  const body =
+    lang === "es"
+      ? `${orderRef} | ${customerName} | ${totalText}`
+      : `${orderRef} | ${customerName} | ${totalText}`;
+
+  showToast(`${title}: ${orderRef}`);
+  if (!canUseBrowserNotifications() || Notification.permission !== "granted") return;
+  try {
+    new Notification(title, { body });
+  } catch (_e) {
+    // Ignore notification errors and keep toast feedback.
+  }
 }
 
 function orderStatusLabel(status) {
@@ -640,12 +676,24 @@ function stopRealtime() {
   if (unsubscribeReservations) unsubscribeReservations();
   unsubscribeOrders = null;
   unsubscribeReservations = null;
+  hasSeenInitialOrdersSnapshot = false;
+  knownOrderIds = new Set();
 }
 
 function startRealtime() {
   stopRealtime();
   unsubscribeOrders = listenOrders(
     (orders) => {
+      const nextIds = new Set(orders.map((order) => order.id));
+      if (!hasSeenInitialOrdersSnapshot) {
+        knownOrderIds = nextIds;
+        hasSeenInitialOrdersSnapshot = true;
+      } else {
+        const newOrders = orders.filter((order) => !knownOrderIds.has(order.id));
+        newOrders.forEach((order) => notifyNewOrder(order));
+        knownOrderIds = nextIds;
+      }
+
       ordersCache = orders;
       renderStats();
       renderFoodStats();
@@ -679,6 +727,7 @@ function unlockUI(user, profile) {
   crmApp.classList.remove("hidden");
   signOutBtn.classList.remove("hidden");
   staffBadge.textContent = `${user.email} | ${t("staffRole")}: ${profile.role}`;
+  ensureNotificationPermission();
   startRealtime();
 }
 
