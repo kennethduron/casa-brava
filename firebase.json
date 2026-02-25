@@ -2,7 +2,7 @@
   "hosting": [
     {
       "target": "casabrava",
-      "public": "public",
+      "public": ".", // <-- use the current folder as the public directory
       "ignore": [
         "firebase.json",
         "**/.*",
