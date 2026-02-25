@@ -1,10 +1,13 @@
 {
-  "emulators": {
-    "dataconnect": {
-      "dataDir": "dataconnect/.dataconnect/pgliteData"
+  "hosting": [
+    {
+      "target": "casabrava",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
     }
-  },
-  "dataconnect": {
-    "source": "dataconnect"
-  }
+  ]
 }
