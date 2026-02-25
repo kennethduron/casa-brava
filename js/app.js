@@ -192,7 +192,7 @@ const menuItems = [
   { id: "d3", category: "desserts", title: { es: "Brownie caliente", en: "Warm brownie" }, price: 6.5, image: "assets/brownie-caliente.jpg" },
   { id: "d4", category: "desserts", title: { es: "Helado artesanal", en: "Artisan ice cream" }, price: 5.0, image: "assets/helado-artesanal.jpg" },
   { id: "d5", category: "desserts", title: { es: "Flan casero", en: "Homemade flan" }, price: 5.5, image: "assets/flan-casero.jpg" },
-  { id: "d6", category: "desserts", title: { es: "Pie de limon", en: "Lemon pie" }, price: 6.0, image: "assets/pie-de-limon.jpg" },
+  { id: "d6", category: "desserts", title: { es: "Pie de limon", en: "Lemon pie" }, price: 6.0, image: "assets/pie-de-limon.jpg?v=2" },
   { id: "d7", category: "desserts", title: { es: "Creme brulee", en: "Creme brulee" }, price: 7.0, image: "assets/creme-brulee.jpg" },
   { id: "d8", category: "desserts", title: { es: "Mousse de chocolate", en: "Chocolate mousse" }, price: 6.5, image: "assets/mousse-de-chocolate.jpg" },
   { id: "d9", category: "desserts", title: { es: "Fruta fresca", en: "Fresh fruit" }, price: 5.0, image: "assets/fruta-fresca.webp" },
@@ -299,7 +299,7 @@ function renderMenu() {
     .map((item) => `
       <article class="menu-card">
         <figure class="menu-photo-wrap">
-          <img class="menu-photo" src="${itemImage(item)}" alt="${item.title[lang]}" loading="lazy">
+          <img class="menu-photo" src="${itemImage(item)}" alt="${item.title[lang]}" loading="lazy" onerror="this.onerror=null;this.src='assets/postres.svg';">
         </figure>
         <h3>${item.title[lang]}</h3>
         <p class="menu-category">${categoryLabel(item.category)}</p>
@@ -536,7 +536,6 @@ reservationForm.addEventListener("submit", submitReservation);
 const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
-
 
 
 
