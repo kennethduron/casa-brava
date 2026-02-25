@@ -4,5 +4,8 @@
     "private": true,
     "scripts": {
         "start": "npx serve . -p 3000"
+    },
+    "dependencies": {
+        "@dataconnect/generated": "file:src/dataconnect-generated"
     }
 }
