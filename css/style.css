@@ -180,6 +180,36 @@ h4 {
   padding: 7px 0;
 }
 
+.hero-live-info {
+  margin-top: 12px;
+  border: 1px solid #ead7c0;
+  background: linear-gradient(110deg, #fff9ef 0%, #fff1dd 100%);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: grid;
+  gap: 7px;
+}
+
+.hero-live-item {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #5f4d3b;
+  font-size: 0.88rem;
+}
+
+.hero-live-item strong {
+  color: #8d3d20;
+  font-weight: 700;
+}
+
+.hero-live-item span {
+  font-weight: 800;
+  color: #3d2a1d;
+}
+
 .hero-badges {
   display: flex;
   gap: 8px;

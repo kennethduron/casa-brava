@@ -67,7 +67,6 @@
                     <li><a href="#pedido" data-i18n="navOrder">Pedido</a></li>
                     <li><a href="#reservas" data-i18n="navReservations">Reservas</a></li>
                     <li><a href="#nosotros" data-i18n="navAbout">Nosotros</a></li>
-                    <li><a href="crm.html">CRM</a></li>
                 </ul>
             </nav>
             <button id="langToggle" class="btn btn-ghost" aria-label="Cambiar idioma">EN</button>
@@ -91,13 +90,23 @@
                     <img class="hero-cover" src="assets/casa-brava.jpg" alt="Plato destacado del restaurante">
                     <h2 data-i18n="heroCardTitle">Horario</h2>
                     <ul>
-                        <li><span data-i18n="daysWeek">Lunes a Viernes</span><strong>11:00 - 23:00</strong></li>
+                        <li><span data-i18n="daysWeek">Lunes a Viernes</span><strong>09:00 - 21:00</strong></li>
                         <li><span data-i18n="daysWeekend">Sabado y Domingo</span><strong>10:00 - 00:00</strong></li>
                     </ul>
                     <div class="hero-badges">
                         <span data-i18n="badgeFast">Servicio rapido</span>
                         <span data-i18n="badgeFresh">Producto fresco</span>
                         <span data-i18n="badgeFamily">Ambiente familiar</span>
+                    </div>
+                    <div class="hero-live-info" aria-label="Honduras live info">
+                        <p class="hero-live-item">
+                            <strong data-i18n="hnTimeLabel">Hora en Honduras</strong>
+                            <span id="hnTimeValue">--:--:--</span>
+                        </p>
+                        <p class="hero-live-item">
+                            <strong data-i18n="hnWeatherLabel">Clima en Tegucigalpa</strong>
+                            <span id="hnWeatherValue">Cargando clima...</span>
+                        </p>
                     </div>
                 </div>
             </div>

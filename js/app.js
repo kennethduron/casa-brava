@@ -76,7 +76,11 @@ const i18n = {
     status_accepted: "Aceptado",
     status_rejected: "Rechazado",
     orderError: "No se pudo enviar el pedido. Intenta de nuevo.",
-    reservationError: "No se pudo enviar la reserva. Intenta de nuevo."
+    reservationError: "No se pudo enviar la reserva. Intenta de nuevo.",
+    hnTimeLabel: "Hora en Honduras",
+    hnWeatherLabel: "Clima en Tegucigalpa",
+    hnWeatherLoading: "Cargando clima...",
+    hnWeatherError: "Clima no disponible"
   },
   en: {
     navMenu: "Menu",
@@ -148,7 +152,11 @@ const i18n = {
     status_accepted: "Accepted",
     status_rejected: "Rejected",
     orderError: "Could not send order. Please try again.",
-    reservationError: "Could not send reservation. Please try again."
+    reservationError: "Could not send reservation. Please try again.",
+    hnTimeLabel: "Honduras time",
+    hnWeatherLabel: "Weather in Tegucigalpa",
+    hnWeatherLoading: "Loading weather...",
+    hnWeatherError: "Weather unavailable"
   }
 };
 
@@ -221,12 +229,20 @@ const reservationForm = document.getElementById("reservationForm");
 const langToggle = document.getElementById("langToggle");
 const navToggle = document.getElementById("navToggle");
 const primaryNav = document.getElementById("primaryNav");
+const hnTimeValue = document.getElementById("hnTimeValue");
+const hnWeatherValue = document.getElementById("hnWeatherValue");
 
 let lang = "es";
 let activeCategory = "all";
 let cart = read(STORAGE.cart, []);
 let lastOrderUnsub = null;
 let toastTimer = null;
+let hnTimeTick = null;
+let hnWeatherTick = null;
+let weatherState = { loading: true, error: false, temperature: null, weatherCode: null };
+
+const HONDURAS_TIMEZONE = "America/Tegucigalpa";
+const WEATHER_ENDPOINT = "https://api.open-meteo.com/v1/forecast?latitude=14.0723&longitude=-87.1921&current=temperature_2m,weather_code&timezone=America%2FTegucigalpa";
 
 function read(key, fallback) {
   try {
@@ -251,6 +267,114 @@ function money(v) {
     currency: "HNL",
     minimumFractionDigits: 2
   }).format(Number(v || 0));
+}
+
+function renderHondurasTime() {
+  if (!hnTimeValue) return;
+  const formatter = new Intl.DateTimeFormat(lang === "es" ? "es-HN" : "en-US", {
+    timeZone: HONDURAS_TIMEZONE,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+  hnTimeValue.textContent = formatter.format(new Date());
+}
+
+function weatherLabelFromCode(code) {
+  const labels = lang === "es"
+    ? {
+        0: "Despejado",
+        1: "Mayormente despejado",
+        2: "Parcialmente nublado",
+        3: "Nublado",
+        45: "Neblina",
+        48: "Neblina escarchada",
+        51: "Llovizna ligera",
+        53: "Llovizna moderada",
+        55: "Llovizna intensa",
+        61: "Lluvia ligera",
+        63: "Lluvia moderada",
+        65: "Lluvia intensa",
+        71: "Nieve ligera",
+        73: "Nieve moderada",
+        75: "Nieve intensa",
+        80: "Chubascos ligeros",
+        81: "Chubascos moderados",
+        82: "Chubascos intensos",
+        95: "Tormenta",
+        96: "Tormenta con granizo",
+        99: "Tormenta fuerte con granizo"
+      }
+    : {
+        0: "Clear sky",
+        1: "Mostly clear",
+        2: "Partly cloudy",
+        3: "Overcast",
+        45: "Fog",
+        48: "Depositing rime fog",
+        51: "Light drizzle",
+        53: "Moderate drizzle",
+        55: "Dense drizzle",
+        61: "Light rain",
+        63: "Moderate rain",
+        65: "Heavy rain",
+        71: "Light snow",
+        73: "Moderate snow",
+        75: "Heavy snow",
+        80: "Light showers",
+        81: "Moderate showers",
+        82: "Violent showers",
+        95: "Thunderstorm",
+        96: "Thunderstorm with hail",
+        99: "Severe thunderstorm with hail"
+      };
+
+  return labels[Number(code)] || (lang === "es" ? "Condicion variable" : "Variable conditions");
+}
+
+function renderHondurasWeather() {
+  if (!hnWeatherValue) return;
+  if (weatherState.loading) {
+    hnWeatherValue.textContent = t("hnWeatherLoading");
+    return;
+  }
+  if (weatherState.error || weatherState.temperature === null) {
+    hnWeatherValue.textContent = t("hnWeatherError");
+    return;
+  }
+  const roundedTemp = Math.round(Number(weatherState.temperature));
+  hnWeatherValue.textContent = `${roundedTemp}°C | ${weatherLabelFromCode(weatherState.weatherCode)}`;
+}
+
+async function fetchHondurasWeather() {
+  weatherState.loading = true;
+  weatherState.error = false;
+  renderHondurasWeather();
+  try {
+    const response = await fetch(WEATHER_ENDPOINT, { cache: "no-store" });
+    if (!response.ok) throw new Error("weather_fetch_failed");
+    const data = await response.json();
+    weatherState = {
+      loading: false,
+      error: false,
+      temperature: data?.current?.temperature_2m ?? null,
+      weatherCode: data?.current?.weather_code ?? null
+    };
+  } catch (_e) {
+    weatherState = { ...weatherState, loading: false, error: true };
+  }
+  renderHondurasWeather();
+}
+
+function startHondurasLiveInfo() {
+  if (!hnTimeValue && !hnWeatherValue) return;
+  renderHondurasTime();
+  renderHondurasWeather();
+  if (hnTimeTick) clearInterval(hnTimeTick);
+  hnTimeTick = setInterval(renderHondurasTime, 1000);
+  fetchHondurasWeather();
+  if (hnWeatherTick) clearInterval(hnWeatherTick);
+  hnWeatherTick = setInterval(fetchHondurasWeather, 10 * 60 * 1000);
 }
 
 function showToast(message, options = {}) {
@@ -279,6 +403,8 @@ function applyI18n() {
   renderMenu();
   renderCart();
   renderTracker();
+  renderHondurasTime();
+  renderHondurasWeather();
 }
 
 function filteredMenu() {
@@ -548,7 +674,7 @@ reservationForm.addEventListener("submit", submitReservation);
 const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
-
+startHondurasLiveInfo();
 
 
 
