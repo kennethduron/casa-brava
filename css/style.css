@@ -1097,6 +1097,24 @@ textarea:focus {
   gap: 8px;
 }
 
+.crm-actions .final-actions {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 100%;
+}
+
+.crm-actions .accept-main {
+  flex: 1 1 auto;
+}
+
+.crm-actions .reject-tiny {
+  flex: 0 0 auto;
+  min-width: 84px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  line-height: 1.1;
+}
+
 .modal {
   position: fixed;
   inset: 0;
@@ -1440,6 +1458,21 @@ textarea:focus {
   .crm-page .crm-actions .btn {
     flex: 1 1 100%;
     min-width: 0;
+  }
+
+  .crm-page .crm-actions .final-actions .btn {
+    width: auto;
+  }
+
+  .crm-page .crm-actions .final-actions .accept-main {
+    flex: 1 1 auto;
+  }
+
+  .crm-page .crm-actions .final-actions .reject-tiny {
+    flex: 0 0 auto;
+    min-width: 72px;
+    padding: 6px 8px;
+    font-size: 0.72rem;
   }
 }
 

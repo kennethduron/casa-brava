@@ -605,8 +605,10 @@ function renderOrders() {
           <button class="btn btn-outline review-order" data-id="${order.id}">${t("review")}</button>
           <button class="btn btn-outline status-change" data-id="${order.id}" data-status="pending">${t("btnPending")}</button>
           <button class="btn btn-outline status-change" data-id="${order.id}" data-status="in_progress">${t("btnInProgress")}</button>
-          <button class="btn btn-primary status-change" data-id="${order.id}" data-status="accepted">${t("btnAccept")}</button>
-          <button class="btn danger status-change" data-id="${order.id}" data-status="rejected">${t("btnReject")}</button>
+          <div class="final-actions">
+            <button class="btn btn-primary status-change accept-main" data-id="${order.id}" data-status="accepted">${t("btnAccept")}</button>
+            <button class="btn danger status-change reject-tiny" data-id="${order.id}" data-status="rejected">${t("btnReject")}</button>
+          </div>
         </div>
       </article>
     `)
