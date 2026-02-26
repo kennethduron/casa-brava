@@ -1389,14 +1389,23 @@ textarea:focus {
 @media (max-width: 860px) {
   .crm-page .nav-wrap {
     flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .crm-page .brand {
+    order: 1;
     min-width: 0;
     max-width: calc(100% - 132px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .crm-page .crm-head-actions {
+    order: 2;
+    margin-left: 0;
+    flex-shrink: 0;
   }
 
   .crm-page .menu-tabs {
