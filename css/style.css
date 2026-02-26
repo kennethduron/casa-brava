@@ -484,6 +484,26 @@ textarea:focus {
   border-bottom: 1px solid #efe1d1;
 }
 
+.cart-drawer header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cart-drawer header h3 {
+  margin: 0;
+}
+
+#closeCart {
+  width: auto;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 4px 8px;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
 .cart-drawer footer {
   border-top: 1px solid #efe1d1;
   border-bottom: none;
@@ -1338,6 +1358,14 @@ textarea:focus {
   .cart-actions .btn,
   .crm-head-actions .btn {
     width: auto;
+  }
+
+  #closeCart {
+    width: auto;
+    min-width: 32px;
+    min-height: 32px;
+    padding: 4px 7px;
+    font-size: 0.76rem;
   }
 
   .crm-head-actions {
