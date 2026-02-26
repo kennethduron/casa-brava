@@ -701,6 +701,16 @@ if (navToggle && primaryNav) {
       navToggle.setAttribute("aria-expanded", "false");
     });
   });
+
+  document.addEventListener("pointerdown", (event) => {
+    const isOpen = primaryNav.classList.contains("open");
+    if (!isOpen) return;
+    const clickedInsideMenu = event.target.closest("#primaryNav");
+    const clickedToggle = event.target.closest("#navToggle");
+    if (clickedInsideMenu || clickedToggle) return;
+    primaryNav.classList.remove("open");
+    navToggle.setAttribute("aria-expanded", "false");
+  });
 }
 
 cartBtn.addEventListener("click", openDrawer);
@@ -718,5 +728,4 @@ const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
 startHondurasLiveInfo();
-
 
