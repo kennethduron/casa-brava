@@ -191,6 +191,8 @@ let unsubscribeOrders = null;
 let unsubscribeReservations = null;
 let hasSeenInitialOrdersSnapshot = false;
 let knownOrderIds = new Set();
+let audioCtx = null;
+let audioUnlocked = false;
 
 function t(key) {
   return (i18n[lang] && i18n[lang][key]) || key;
@@ -212,6 +214,56 @@ function showToast(message) {
 
 function canUseBrowserNotifications() {
   return typeof window !== "undefined" && "Notification" in window;
+}
+
+function canUseWebAudio() {
+  return typeof window !== "undefined" && ("AudioContext" in window || "webkitAudioContext" in window);
+}
+
+function getAudioContext() {
+  if (!canUseWebAudio()) return null;
+  if (audioCtx) return audioCtx;
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioCtx();
+  } catch (_e) {
+    audioCtx = null;
+  }
+  return audioCtx;
+}
+
+async function unlockNotificationSound() {
+  const ctx = getAudioContext();
+  if (!ctx) return false;
+  try {
+    if (ctx.state === "suspended") await ctx.resume();
+    audioUnlocked = ctx.state === "running";
+  } catch (_e) {
+    audioUnlocked = false;
+  }
+  return audioUnlocked;
+}
+
+function playNewOrderSound() {
+  if (!audioUnlocked) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const now = ctx.currentTime;
+  const beepOffsets = [0, 0.23];
+  beepOffsets.forEach((offset) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(880, now + offset);
+    gain.gain.setValueAtTime(0.0001, now + offset);
+    gain.gain.exponentialRampToValueAtTime(0.18, now + offset + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.18);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now + offset);
+    osc.stop(now + offset + 0.2);
+  });
 }
 
 async function ensureNotificationPermission() {
@@ -236,6 +288,7 @@ function notifyNewOrder(order) {
       : `${orderRef} | ${customerName} | ${totalText}`;
 
   showToast(`${title}: ${orderRef}`);
+  playNewOrderSound();
   if (!canUseBrowserNotifications() || Notification.permission !== "granted") return;
   try {
     new Notification(title, { body });
@@ -730,6 +783,7 @@ function unlockUI(user, profile) {
   signOutBtn.classList.remove("hidden");
   staffBadge.textContent = `${user.email} | ${t("staffRole")}: ${profile.role}`;
   ensureNotificationPermission();
+  unlockNotificationSound();
   startRealtime();
 }
 
@@ -816,6 +870,8 @@ langToggle.addEventListener("click", () => {
 });
 
 window.addEventListener("resize", applyI18n);
+window.addEventListener("pointerdown", unlockNotificationSound, { once: true });
+window.addEventListener("keydown", unlockNotificationSound, { once: true });
 
 authForm.addEventListener("submit", async (event) => {
   event.preventDefault();
