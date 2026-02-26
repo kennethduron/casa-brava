@@ -357,7 +357,7 @@ function addToCart(id, sourceEl) {
   if (!item) return;
   const row = cart.find((c) => c.id === id);
   if (row) row.qty += 1;
-  else cart.push({ id: item.id, title: item.title, price: item.price, qty: 1 });
+  else cart.push({ id: item.id, title: item.title, price: item.price, qty: 1, image: item.image, category: item.category });
   write(STORAGE.cart, cart);
   renderCart();
   const message = `${item.title[lang]} ${t("addedToCart")}`;
@@ -389,8 +389,13 @@ function renderCart() {
     .map(
       (row) => `
       <div class="cart-row">
-        <h4>${row.title[lang]}</h4>
-        <p>${money(row.price)} x ${row.qty}</p>
+        <div class="cart-row-main">
+          <img class="cart-thumb" src="${cartImage(row)}" alt="${row.title[lang]}" loading="lazy" onerror="this.onerror=null;this.src='assets/food.svg';">
+          <div class="cart-row-text">
+            <h4>${row.title[lang]}</h4>
+            <p>${money(row.price)} x ${row.qty}</p>
+          </div>
+        </div>
         <div class="qty-line">
           <button class="btn btn-outline qty" data-id="${row.id}" data-delta="-1">-</button>
           <button class="btn btn-outline qty" data-id="${row.id}" data-delta="1">+</button>
@@ -400,6 +405,13 @@ function renderCart() {
     `
     )
     .join("");
+}
+
+function cartImage(row) {
+  if (row.image) return row.image;
+  const source = menuItems.find((item) => item.id === row.id);
+  if (source) return itemImage(source);
+  return "assets/food.svg";
 }
 
 function renderTracker(order) {
@@ -536,7 +548,6 @@ reservationForm.addEventListener("submit", submitReservation);
 const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
-
 
 
 

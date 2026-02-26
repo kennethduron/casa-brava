@@ -532,6 +532,26 @@ textarea:focus {
   padding: 10px;
 }
 
+.cart-row-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 7px;
+  object-fit: cover;
+  border: 1px solid #e7d7c4;
+  background: #fff1e1;
+  flex: 0 0 auto;
+}
+
+.cart-row-text {
+  min-width: 0;
+}
+
 .cart-row h4 {
   margin: 0 0 2px;
 }
@@ -1379,6 +1399,11 @@ textarea:focus {
 
   .menu-card p {
     font-size: 0.88rem;
+  }
+
+  .cart-thumb {
+    width: 36px;
+    height: 36px;
   }
 
   #closeCart {
