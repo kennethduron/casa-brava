@@ -239,6 +239,7 @@ let lastOrderUnsub = null;
 let toastTimer = null;
 let hnTimeTick = null;
 let hnWeatherTick = null;
+let acceptedTrackerTimer = null;
 let weatherState = { loading: true, error: false, temperature: null, weatherCode: null };
 
 const HONDURAS_TIMEZONE = "America/Tegucigalpa";
@@ -478,6 +479,46 @@ function showCenterNotice(message) {
   showToast(message, { duration: 2200, center: true, highlight: true });
 }
 
+function clearAcceptedTrackerTimer() {
+  if (!acceptedTrackerTimer) return;
+  clearTimeout(acceptedTrackerTimer);
+  acceptedTrackerTimer = null;
+}
+
+function clearLastOrderTracker() {
+  clearAcceptedTrackerTimer();
+  if (lastOrderUnsub) {
+    lastOrderUnsub();
+    lastOrderUnsub = null;
+  }
+  localStorage.removeItem(STORAGE.lastOrderId);
+  renderTracker();
+}
+
+function asDate(value) {
+  if (!value) return null;
+  const date = value.toDate ? value.toDate() : new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function scheduleAcceptedTrackerClear(order) {
+  clearAcceptedTrackerTimer();
+  if (!order || order.status !== "accepted") return;
+
+  const acceptedAt = asDate(order.updatedAt) || asDate(order.createdAt);
+  if (!acceptedAt) return;
+
+  const hideAt = acceptedAt.getTime() + 3 * 60 * 1000;
+  const waitMs = hideAt - Date.now();
+  if (waitMs <= 0) {
+    clearLastOrderTracker();
+    return;
+  }
+  acceptedTrackerTimer = setTimeout(() => {
+    clearLastOrderTracker();
+  }, waitMs);
+}
+
 function addToCart(id, sourceEl) {
   const item = menuItems.find((m) => m.id === id);
   if (!item) return;
@@ -541,6 +582,7 @@ function cartImage(row) {
 }
 
 function renderTracker(order) {
+  scheduleAcceptedTrackerClear(order);
   if (!order) {
     tracker.innerHTML = `<p>${t("trackerEmpty")}</p>`;
     return;
@@ -584,6 +626,7 @@ async function submitOrder() {
 }
 
 function subscribeLastOrder(orderId) {
+  clearAcceptedTrackerTimer();
   if (!orderId) {
     renderTracker();
     return;
@@ -675,6 +718,5 @@ const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
 if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
 applyI18n();
 startHondurasLiveInfo();
-
 
 
