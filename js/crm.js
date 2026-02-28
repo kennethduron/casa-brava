@@ -513,13 +513,21 @@ function renderSalesCalendar() {
   if (!salesCalendar) return;
   const monthSales = salesByDayForMonth(calendarMonth);
   const firstOfMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+  const today = new Date();
+  const isCurrentMonth =
+    calendarMonth.getFullYear() === today.getFullYear() &&
+    calendarMonth.getMonth() === today.getMonth();
   const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
   const firstDayOffset = (firstOfMonth.getDay() + 6) % 7;
   const monthKey = monthKeyFromDate(firstOfMonth);
   const dayCells = [];
 
   if (!selectedCalendarDate || !selectedCalendarDate.startsWith(monthKey)) {
-    selectedCalendarDate = monthSales.size ? Array.from(monthSales.keys())[0] : `${monthKey}-01`;
+    if (isCurrentMonth) {
+      selectedCalendarDate = dayKeyFromDate(today);
+    } else {
+      selectedCalendarDate = monthSales.size ? Array.from(monthSales.keys())[0] : `${monthKey}-01`;
+    }
   }
 
   for (let i = 0; i < firstDayOffset; i += 1) {

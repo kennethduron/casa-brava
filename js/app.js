@@ -2,7 +2,8 @@
 
 const STORAGE = {
   cart: "restaurant_cart_v1",
-  lastOrderId: "restaurant_last_order_id"
+  lastOrderId: "restaurant_last_order_id",
+  recentOrderIds: "restaurant_recent_order_ids"
 };
 
 const i18n = {
@@ -78,7 +79,7 @@ const i18n = {
     orderError: "No se pudo enviar el pedido. Intenta de nuevo.",
     reservationError: "No se pudo enviar la reserva. Intenta de nuevo.",
     hnTimeLabel: "Hora en Honduras",
-    hnWeatherLabel: "Clima en Tegucigalpa",
+    hnWeatherLabel: "Clima en El Progreso",
     hnWeatherLoading: "Cargando clima...",
     hnWeatherError: "Clima no disponible"
   },
@@ -154,7 +155,7 @@ const i18n = {
     orderError: "Could not send order. Please try again.",
     reservationError: "Could not send reservation. Please try again.",
     hnTimeLabel: "Honduras time",
-    hnWeatherLabel: "Weather in Tegucigalpa",
+    hnWeatherLabel: "Weather in El Progreso",
     hnWeatherLoading: "Loading weather...",
     hnWeatherError: "Weather unavailable"
   }
@@ -235,15 +236,17 @@ const hnWeatherValue = document.getElementById("hnWeatherValue");
 let lang = "es";
 let activeCategory = "all";
 let cart = read(STORAGE.cart, []);
-let lastOrderUnsub = null;
+let recentOrderIds = [];
+const trackerOrderById = new Map();
+const trackerUnsubs = new Map();
+const trackerClearTimers = new Map();
 let toastTimer = null;
 let hnTimeTick = null;
 let hnWeatherTick = null;
-let acceptedTrackerTimer = null;
 let weatherState = { loading: true, error: false, temperature: null, weatherCode: null };
 
 const HONDURAS_TIMEZONE = "America/Tegucigalpa";
-const WEATHER_ENDPOINT = "https://api.open-meteo.com/v1/forecast?latitude=14.0723&longitude=-87.1921&current=temperature_2m,weather_code&timezone=America%2FTegucigalpa";
+const WEATHER_ENDPOINT = "https://api.open-meteo.com/v1/forecast?latitude=15.4012&longitude=-87.8000&current=temperature_2m,weather_code&timezone=America%2FTegucigalpa";
 
 function read(key, fallback) {
   try {
@@ -479,19 +482,36 @@ function showCenterNotice(message) {
   showToast(message, { duration: 2200, center: true, highlight: true });
 }
 
-function clearAcceptedTrackerTimer() {
-  if (!acceptedTrackerTimer) return;
-  clearTimeout(acceptedTrackerTimer);
-  acceptedTrackerTimer = null;
+function readRecentOrderIds() {
+  const saved = read(STORAGE.recentOrderIds, []);
+  if (!Array.isArray(saved)) return [];
+  return Array.from(new Set(saved.filter((id) => typeof id === "string" && id.trim())));
 }
 
-function clearLastOrderTracker() {
-  clearAcceptedTrackerTimer();
-  if (lastOrderUnsub) {
-    lastOrderUnsub();
-    lastOrderUnsub = null;
-  }
-  localStorage.removeItem(STORAGE.lastOrderId);
+function writeRecentOrderIds(ids) {
+  recentOrderIds = Array.from(new Set(ids.filter((id) => typeof id === "string" && id.trim())));
+  write(STORAGE.recentOrderIds, recentOrderIds);
+}
+
+function clearTrackerTimer(orderId) {
+  const timer = trackerClearTimers.get(orderId);
+  if (!timer) return;
+  clearTimeout(timer);
+  trackerClearTimers.delete(orderId);
+}
+
+function unsubscribeTrackerOrder(orderId) {
+  clearTrackerTimer(orderId);
+  const unsub = trackerUnsubs.get(orderId);
+  if (typeof unsub === "function") unsub();
+  trackerUnsubs.delete(orderId);
+  trackerOrderById.delete(orderId);
+}
+
+function removeRecentOrderId(orderId) {
+  unsubscribeTrackerOrder(orderId);
+  writeRecentOrderIds(recentOrderIds.filter((id) => id !== orderId));
+  if (!recentOrderIds.length) localStorage.removeItem(STORAGE.lastOrderId);
   renderTracker();
 }
 
@@ -502,21 +522,25 @@ function asDate(value) {
 }
 
 function scheduleAcceptedTrackerClear(order) {
-  clearAcceptedTrackerTimer();
-  if (!order || order.status !== "accepted") return;
+  if (!order || !order.id) return;
+  const orderId = order.id;
+  clearTrackerTimer(orderId);
+  const isTerminalStatus = order && (order.status === "accepted" || order.status === "rejected");
+  if (!isTerminalStatus) return;
 
-  const acceptedAt = asDate(order.updatedAt) || asDate(order.createdAt);
-  if (!acceptedAt) return;
+  const resolvedAt = asDate(order.updatedAt) || asDate(order.createdAt);
+  if (!resolvedAt) return;
 
-  const hideAt = acceptedAt.getTime() + 3 * 60 * 1000;
+  const hideAt = resolvedAt.getTime() + 3 * 60 * 1000;
   const waitMs = hideAt - Date.now();
   if (waitMs <= 0) {
-    clearLastOrderTracker();
+    removeRecentOrderId(orderId);
     return;
   }
-  acceptedTrackerTimer = setTimeout(() => {
-    clearLastOrderTracker();
+  const timer = setTimeout(() => {
+    removeRecentOrderId(orderId);
   }, waitMs);
+  trackerClearTimers.set(orderId, timer);
 }
 
 function addToCart(id, sourceEl) {
@@ -581,18 +605,69 @@ function cartImage(row) {
   return "assets/food.svg";
 }
 
-function renderTracker(order) {
-  scheduleAcceptedTrackerClear(order);
-  if (!order) {
+function renderTracker() {
+  const orders = recentOrderIds
+    .map((id) => trackerOrderById.get(id))
+    .filter((order) => Boolean(order))
+    .sort((a, b) => {
+      const aDate = asDate(a.createdAt);
+      const bDate = asDate(b.createdAt);
+      return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0);
+    });
+
+  if (!orders.length) {
     tracker.innerHTML = `<p>${t("trackerEmpty")}</p>`;
     return;
   }
-  const createdAt = order.createdAt && order.createdAt.toDate ? order.createdAt.toDate() : new Date(order.createdAt || Date.now());
-  tracker.innerHTML = `
-    <strong>${t("trackerLabel")}: #${order.displayId || order.id.slice(0, 6)}</strong>
-    <p>${order.customer?.name || ""} | ${createdAt.toLocaleString(lang === "es" ? "es-ES" : "en-US")}</p>
-    <p><strong>${statusLabel(order.status)}</strong></p>
-  `;
+  tracker.innerHTML = orders
+    .map((order) => {
+      const createdAt = asDate(order.createdAt) || new Date();
+      return `
+        <div class="tracker-row">
+          <strong>${t("trackerLabel")}: #${order.displayId || order.id.slice(0, 6)}</strong>
+          <p>${order.customer?.name || ""} | ${createdAt.toLocaleString(lang === "es" ? "es-ES" : "en-US")}</p>
+          <p><strong>${statusLabel(order.status)}</strong></p>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function subscribeTrackerOrder(orderId) {
+  if (!orderId || trackerUnsubs.has(orderId)) return;
+  const unsub = listenOrderById(
+    orderId,
+    (order) => {
+      if (!order) {
+        removeRecentOrderId(orderId);
+        return;
+      }
+      trackerOrderById.set(orderId, order);
+      scheduleAcceptedTrackerClear(order);
+      renderTracker();
+    },
+    () => {
+      trackerOrderById.delete(orderId);
+      renderTracker();
+    }
+  );
+  trackerUnsubs.set(orderId, unsub);
+}
+
+function syncTrackerSubscriptions() {
+  const active = new Set(recentOrderIds);
+  Array.from(trackerUnsubs.keys()).forEach((id) => {
+    if (!active.has(id)) unsubscribeTrackerOrder(id);
+  });
+  recentOrderIds.forEach((id) => subscribeTrackerOrder(id));
+}
+
+function addRecentOrderId(orderId) {
+  if (!orderId) return;
+  const next = [orderId, ...recentOrderIds.filter((id) => id !== orderId)].slice(0, 5);
+  writeRecentOrderIds(next);
+  localStorage.setItem(STORAGE.lastOrderId, orderId);
+  syncTrackerSubscriptions();
 }
 
 async function submitOrder() {
@@ -613,8 +688,7 @@ async function submitOrder() {
 
   try {
     const orderId = await addOrder(orderPayload);
-    localStorage.setItem(STORAGE.lastOrderId, orderId);
-    subscribeLastOrder(orderId);
+    addRecentOrderId(orderId);
     cart = [];
     write(STORAGE.cart, cart);
     renderCart();
@@ -623,20 +697,6 @@ async function submitOrder() {
   } catch (_e) {
     showToast(t("orderError"));
   }
-}
-
-function subscribeLastOrder(orderId) {
-  clearAcceptedTrackerTimer();
-  if (!orderId) {
-    renderTracker();
-    return;
-  }
-  if (lastOrderUnsub) lastOrderUnsub();
-  lastOrderUnsub = listenOrderById(
-    orderId,
-    (order) => renderTracker(order),
-    () => renderTracker()
-  );
 }
 
 async function submitReservation(event) {
@@ -724,8 +784,14 @@ clearCart.addEventListener("click", () => {
 sendToKitchenBtn.addEventListener("click", submitOrder);
 reservationForm.addEventListener("submit", submitReservation);
 
-const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
-if (existingLastOrderId) subscribeLastOrder(existingLastOrderId);
+recentOrderIds = readRecentOrderIds();
+if (!recentOrderIds.length) {
+  const existingLastOrderId = localStorage.getItem(STORAGE.lastOrderId);
+  if (existingLastOrderId) {
+    recentOrderIds = [existingLastOrderId];
+    writeRecentOrderIds(recentOrderIds);
+  }
+}
+syncTrackerSubscriptions();
 applyI18n();
 startHondurasLiveInfo();
-
