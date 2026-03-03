@@ -240,10 +240,16 @@
                 <span data-i18n="orderCustomerName">Nombre para el pedido</span>
                 <input id="orderCustomerName" type="text">
             </label>
-            <label>
-                <span data-i18n="orderCustomerPhone">Telefono de contacto</span>
-                <input id="orderCustomerPhone" type="tel">
-            </label>
+            <div class="cart-phone-pickup-row">
+                <label class="cart-phone-field">
+                    <span data-i18n="orderCustomerPhone">Telefono de contacto</span>
+                    <input id="orderCustomerPhone" type="tel">
+                </label>
+                <label class="cart-pickup-inline">
+                    <input id="orderPickup" type="checkbox">
+                    <span data-i18n="orderPickupLabel">Para llevar</span>
+                </label>
+            </div>
             <label>
                 <span data-i18n="orderCustomerComments">Comentarios del pedido</span>
                 <textarea id="orderCustomerComments" rows="3" data-i18n-placeholder="orderCustomerCommentsPlaceholder"
@@ -276,7 +282,7 @@
     <div id="paypalPaymentModal" class="modal hidden" role="dialog" aria-modal="true">
         <div class="modal-card">
             <header>
-                <h3 data-i18n="paypalTitle">Pagar con PayPal</h3>
+                <h3 data-i18n="paypalTitle">Pagar con tarjeta</h3>
                 <button id="closePaypalPayment" class="btn btn-ghost" aria-label="Cerrar / Close">X</button>
             </header>
             <p data-i18n="paypalInstructions">Completa el pago seguro con PayPal o tarjeta.</p>
@@ -287,7 +293,8 @@
                 </label>
                 <label class="full">
                     <span data-i18n="cardNumberLabel">Numero de tarjeta</span>
-                    <input id="cardNumber" type="text" inputmode="numeric" maxlength="19" required placeholder="1234 5678 9012 3456">
+                    <input id="cardNumber" type="text" inputmode="numeric" maxlength="19" required
+                        placeholder="1234 5678 9012 3456">
                 </label>
                 <label>
                     <span data-i18n="cardExpiryLabel">Vencimiento (MM/AA)</span>
@@ -298,7 +305,8 @@
                     <input id="cardCvv" type="password" inputmode="numeric" maxlength="4" required placeholder="123">
                 </label>
                 <div class="full cart-actions">
-                    <button id="confirmCardFallbackPayment" type="submit" class="btn btn-primary" data-i18n="btnPayNow">Pagar ahora</button>
+                    <button id="confirmCardFallbackPayment" type="submit" class="btn btn-primary"
+                        data-i18n="btnPayNow">Pagar ahora</button>
                 </div>
             </form>
             <div id="paypalButtonsContainer"></div>

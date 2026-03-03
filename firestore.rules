@@ -18,10 +18,11 @@ service cloud.firestore {
           'displayId', 'language', 'customer', 'items', 'total', 'payment', 'status', 'createdAt', 'updatedAt', 'updatedBy'
         ])
         && request.resource.data.customer is map
-        && request.resource.data.customer.keys().hasOnly(['name', 'phone', 'comments'])
+        && request.resource.data.customer.keys().hasOnly(['name', 'phone', 'comments', 'pickup'])
         && request.resource.data.customer.name is string
         && request.resource.data.customer.phone is string
         && (!('comments' in request.resource.data.customer) || request.resource.data.customer.comments is string)
+        && (!('pickup' in request.resource.data.customer) || request.resource.data.customer.pickup is bool)
         && request.resource.data.items is list
         && request.resource.data.total is number
         && (!('payment' in request.resource.data)

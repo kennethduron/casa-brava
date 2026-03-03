@@ -613,6 +613,38 @@ textarea:focus {
   gap: 10px;
 }
 
+.cart-phone-pickup-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.cart-phone-field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cart-pickup-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+
+.cart-pickup-inline input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border-radius: 4px;
+  accent-color: var(--primary);
+  box-shadow: none;
+}
+
 .cart-actions {
   display: flex;
   gap: 8px;
@@ -1387,6 +1419,18 @@ textarea:focus {
     width: 100%;
     right: -100%;
     border-left: none;
+  }
+
+  .cart-phone-pickup-row {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cart-pickup-inline {
+    font-size: 0.85rem;
+    white-space: normal;
+    line-height: 1.2;
+    margin-bottom: 0;
   }
 
   .footer-wrap {

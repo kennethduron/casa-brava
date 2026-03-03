@@ -69,13 +69,14 @@ const i18n = {
     orderCustomerPhone: "Telefono de contacto",
     orderCustomerComments: "Comentarios del pedido",
     orderCustomerCommentsPlaceholder: "Alergias, sin picante, para llevar, etc.",
+    orderPickupLabel: "Para llevar",
     btnSendKitchen: "Enviar a cocina",
     btnPayNow: "Pagar ahora",
     btnPayCashier: "Pagar en caja",
     btnPay: "Pagar",
     paymentChoiceTitle: "Metodo de pago",
     paymentChoiceText: "Elige como deseas pagar este pedido para continuar.",
-    paypalTitle: "Pagar con PayPal",
+    paypalTitle: "Pagar con tarjeta",
     paypalInstructions: "Agrega la informacion de tu tarjeta y luego toca Pagar ahora.",
     cardNameLabel: "Nombre en la tarjeta",
     cardNumberLabel: "Numero de tarjeta",
@@ -92,6 +93,8 @@ const i18n = {
     needCustomer: "Completa nombre y telefono del pedido.",
     trackerEmpty: "No hay pedidos recientes.",
     trackerLabel: "Ultimo pedido",
+    trackerPayAtCashier: "Pagar en caja",
+    trackerPaymentProcessed: "Pago procesado con éxito",
     status_pending: "Pendiente",
     status_in_progress: "En preparacion",
     status_accepted: "Aceptado",
@@ -171,13 +174,14 @@ const i18n = {
     orderCustomerPhone: "Contact phone",
     orderCustomerComments: "Order comments",
     orderCustomerCommentsPlaceholder: "Allergies, no spice, takeaway, etc.",
+    orderPickupLabel: "To go",
     btnSendKitchen: "Send to kitchen",
     btnPayNow: "Pay now",
     btnPayCashier: "Pay at cashier",
     btnPay: "Pay",
     paymentChoiceTitle: "Payment method",
     paymentChoiceText: "Choose how you want to pay this order to continue.",
-    paypalTitle: "Pay with PayPal",
+    paypalTitle: "Pay with card",
     paypalInstructions: "Add your card information and then tap Pay now.",
     cardNameLabel: "Name on card",
     cardNumberLabel: "Card number",
@@ -194,6 +198,8 @@ const i18n = {
     needCustomer: "Please complete order name and phone.",
     trackerEmpty: "No recent orders.",
     trackerLabel: "Last order",
+    trackerPayAtCashier: "Pay at cashier",
+    trackerPaymentProcessed: "Payment was successfully processed",
     status_pending: "Pending",
     status_in_progress: "In preparation",
     status_accepted: "Accepted",
@@ -573,8 +579,8 @@ function animateAddToCart(sourceEl, message) {
   setTimeout(() => badge.remove(), 520);
 }
 
-function showCenterNotice(message) {
-  showToast(message, { duration: 2200, center: true, highlight: true });
+function showCenterNotice(message, duration = 2200) {
+  showToast(message, { duration, center: true, highlight: true });
 }
 
 function readRecentOrderIds() {
@@ -717,10 +723,16 @@ function renderTracker() {
   tracker.innerHTML = orders
     .map((order) => {
       const createdAt = asDate(order.createdAt) || new Date();
+      const isPaid = order.payment?.status === "paid";
+      const isToGo = Boolean(order.customer?.pickup);
+      const customerPaymentLine = isPaid
+        ? (isToGo ? `${t("orderPickupLabel")} | ${t("trackerPaymentProcessed")}` : t("trackerPaymentProcessed"))
+        : (isToGo ? `${t("orderPickupLabel")} | ${t("trackerPayAtCashier")}` : t("trackerPayAtCashier"));
       return `
         <div class="tracker-row">
           <strong>${t("trackerLabel")}: #${order.displayId || order.id.slice(0, 6)}</strong>
           <p>${order.customer?.name || ""} | ${createdAt.toLocaleString(lang === "es" ? "es-ES" : "en-US")}</p>
+          <p><strong>${customerPaymentLine}</strong></p>
           <p><strong>${statusLabel(order.status)}</strong></p>
         </div>
       `;
@@ -819,11 +831,12 @@ function validateCustomerForOrder() {
   const customerName = (document.getElementById("orderCustomerName").value || "").trim();
   const customerPhone = (document.getElementById("orderCustomerPhone").value || "").trim();
   const customerComments = (document.getElementById("orderCustomerComments")?.value || "").trim();
+  const customerPickup = Boolean(document.getElementById("orderPickup")?.checked);
   if (!customerName || !customerPhone) {
     showToast(t("needCustomer"));
     return null;
   }
-  return { customerName, customerPhone, customerComments };
+  return { customerName, customerPhone, customerComments, customerPickup };
 }
 
 function loadPayPalSdk() {
@@ -913,7 +926,12 @@ async function submitOrderWithMode(mode, paymentMeta = {}, options = {}) {
 
   const orderPayload = {
     language: lang,
-    customer: { name: customer.customerName, phone: customer.customerPhone, comments: customer.customerComments },
+    customer: {
+      name: customer.customerName,
+      phone: customer.customerPhone,
+      comments: customer.customerComments,
+      pickup: customer.customerPickup
+    },
     items: cart,
     total: cart.reduce((sum, row) => sum + row.qty * row.price, 0),
     payment: buildPaymentDetails(mode, paymentMeta)
@@ -927,6 +945,8 @@ async function submitOrderWithMode(mode, paymentMeta = {}, options = {}) {
     renderCart();
     const commentsField = document.getElementById("orderCustomerComments");
     if (commentsField) commentsField.value = "";
+    const pickupField = document.getElementById("orderPickup");
+    if (pickupField) pickupField.checked = false;
     closePaypalPaymentModal();
     closePaymentChoiceModal();
     closeDrawer();
@@ -1034,7 +1054,7 @@ closePaymentChoiceBtn?.addEventListener("click", closePaymentChoiceModal);
 choosePayCashBtn?.addEventListener("click", async () => {
   closePaymentChoiceModal();
   const sent = await submitOrderWithMode("cash_on_pickup", {}, { showConfirmation: false });
-  if (sent) showCenterNotice(t("paymentCashSent"));
+  if (sent) showCenterNotice(t("paymentCashSent"), 4200);
 });
 choosePayNowBtn?.addEventListener("click", () => {
   closePaymentChoiceModal();

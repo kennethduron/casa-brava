@@ -40,6 +40,10 @@ const i18n = {
     emptyReservations: "No hay reservas registradas.",
     customer: "Cliente",
     orderComments: "Comentarios del pedido",
+    orderPickupBadge: "Para llevar",
+    orderCashierPending: "Pagará en caja",
+    orderPaidMessage: "Pago realizado",
+    orderUnpaidMessage: "No ha pagado el pedido",
     payment: "Pago",
     paymentMethod: "Metodo",
     paymentStatus: "Estado",
@@ -119,6 +123,10 @@ const i18n = {
     emptyReservations: "No reservations found.",
     customer: "Customer",
     orderComments: "Order comments",
+    orderPickupBadge: "To go",
+    orderCashierPending: "Will pay in person",
+    orderPaidMessage: "Payment made",
+    orderUnpaidMessage: "Order not paid yet",
     payment: "Payment",
     paymentMethod: "Method",
     paymentStatus: "Status",
@@ -356,6 +364,18 @@ function paymentStatusLabel(status) {
   if (status === "paid") return t("payStatusPaid");
   if (status === "pending") return t("payStatusPending");
   return t("payStatusUnpaid");
+}
+
+function crmPaymentLine(order) {
+  const paymentDone = order?.payment?.status === "paid";
+  const paymentText = paymentDone ? t("orderPaidMessage") : t("orderUnpaidMessage");
+  if (order?.customer?.pickup) {
+    return `${t("orderPickupBadge")} | ${paymentText}`;
+  }
+  if (order?.payment?.method === "cash_on_pickup" && !paymentDone) {
+    return t("orderCashierPending");
+  }
+  return paymentText;
 }
 
 function formatDate(value) {
@@ -664,7 +684,7 @@ function renderSalesCalendar() {
                           <strong>#${order.displayId || order.id.slice(0, 6)}</strong>
                           <p>${t("customer")}: ${order.customer?.name || "-"} (${order.customer?.phone || "-"})</p>
                           <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
-                          <p>${t("payment")}: ${paymentMethodLabel(order.payment?.method)} | ${paymentStatusLabel(order.payment?.status)}</p>
+                          <p><strong>${crmPaymentLine(order)}</strong></p>
                           <p>${timeLabel(order.createdAt)} | ${money(order.total)}</p>
                         </div>
                         <button class="btn btn-outline" data-review-order="${order.id}">${t("review")}</button>
@@ -717,7 +737,7 @@ function renderOrders() {
             <strong>#${order.displayId || order.id.slice(0, 6)}</strong>
             <p>${t("customer")}: ${order.customer?.name || ""} (${order.customer?.phone || ""})</p>
             <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
-            <p>${t("payment")}: ${paymentMethodLabel(order.payment?.method)} | ${paymentStatusLabel(order.payment?.status)}</p>
+            <p><strong>${crmPaymentLine(order)}</strong></p>
           </div>
           <span class="badge ${order.status}">${orderStatusLabel(order.status)}</span>
         </div>
@@ -775,8 +795,7 @@ function openReview(orderId) {
   reviewBody.innerHTML = `
     <p>${t("customer")}: <strong>${order.customer?.name || ""}</strong> (${order.customer?.phone || ""})</p>
     <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
-    <p>${t("paymentMethod")}: ${paymentMethodLabel(order.payment?.method)}</p>
-    <p>${t("paymentStatus")}: ${paymentStatusLabel(order.payment?.status)}</p>
+    <p><strong>${crmPaymentLine(order)}</strong></p>
     <p>${t("date")}: ${formatDate(order.createdAt)}</p>
     <p>${t("total")}: <strong>${money(order.total)}</strong></p>
     <ul>

@@ -41,7 +41,8 @@ function normalizeOrderInput(order) {
     customer: {
       name: (order.customer && order.customer.name) || "",
       phone: (order.customer && order.customer.phone) || "",
-      comments: (order.customer && order.customer.comments) || ""
+      comments: (order.customer && order.customer.comments) || "",
+      pickup: Boolean(order.customer && order.customer.pickup)
     },
     items: Array.isArray(order.items) ? order.items : [],
     total: Number(order.total || 0),
@@ -74,6 +75,9 @@ async function addOrder(order) {
     // that do not accept the `payment` field yet.
     const legacyPayload = { ...payload };
     delete legacyPayload.payment;
+    if (legacyPayload.customer && typeof legacyPayload.customer === "object") {
+      delete legacyPayload.customer.pickup;
+    }
     const ref = await addDoc(collection(db, "orders"), legacyPayload);
     return ref.id;
   }
