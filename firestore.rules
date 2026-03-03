@@ -15,13 +15,27 @@ service cloud.firestore {
 
     function validOrderCreate() {
       return request.resource.data.keys().hasOnly([
-          'displayId', 'language', 'customer', 'items', 'total', 'status', 'createdAt', 'updatedAt', 'updatedBy'
+          'displayId', 'language', 'customer', 'items', 'total', 'payment', 'status', 'createdAt', 'updatedAt', 'updatedBy'
         ])
         && request.resource.data.customer is map
+        && request.resource.data.customer.keys().hasOnly(['name', 'phone', 'comments'])
         && request.resource.data.customer.name is string
         && request.resource.data.customer.phone is string
+        && (!('comments' in request.resource.data.customer) || request.resource.data.customer.comments is string)
         && request.resource.data.items is list
         && request.resource.data.total is number
+        && (!('payment' in request.resource.data)
+          || (
+            request.resource.data.payment is map
+            && request.resource.data.payment.keys().hasOnly(['method', 'status', 'provider', 'checkoutUrl', 'cardLast4', 'transactionId', 'paypalOrderId'])
+            && request.resource.data.payment.method is string
+            && request.resource.data.payment.status is string
+            && request.resource.data.payment.provider is string
+            && request.resource.data.payment.checkoutUrl is string
+            && request.resource.data.payment.cardLast4 is string
+            && request.resource.data.payment.transactionId is string
+            && request.resource.data.payment.paypalOrderId is string
+          ))
         && request.resource.data.status == 'pending';
     }
 

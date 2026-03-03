@@ -33,15 +33,27 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 function normalizeOrderInput(order) {
+  const paymentMethod = (order.payment && order.payment.method) || "cash_on_pickup";
+  const paymentStatus = (order.payment && order.payment.status) || (paymentMethod === "online" ? "pending" : "unpaid");
   return {
     displayId: order.displayId || null,
     language: order.language || "es",
     customer: {
       name: (order.customer && order.customer.name) || "",
-      phone: (order.customer && order.customer.phone) || ""
+      phone: (order.customer && order.customer.phone) || "",
+      comments: (order.customer && order.customer.comments) || ""
     },
     items: Array.isArray(order.items) ? order.items : [],
     total: Number(order.total || 0),
+    payment: {
+      method: paymentMethod,
+      status: paymentStatus,
+      provider: (order.payment && order.payment.provider) || "",
+      checkoutUrl: (order.payment && order.payment.checkoutUrl) || "",
+      cardLast4: (order.payment && order.payment.cardLast4) || "",
+      transactionId: (order.payment && order.payment.transactionId) || "",
+      paypalOrderId: (order.payment && order.payment.paypalOrderId) || ""
+    },
     status: "pending",
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()
@@ -50,8 +62,21 @@ function normalizeOrderInput(order) {
 
 async function addOrder(order) {
   const payload = normalizeOrderInput(order);
-  const ref = await addDoc(collection(db, "orders"), payload);
-  return ref.id;
+  try {
+    const ref = await addDoc(collection(db, "orders"), payload);
+    return ref.id;
+  } catch (error) {
+    const code = String(error && error.code ? error.code : "");
+    const isPermissionDenied = code.includes("permission-denied");
+    if (!isPermissionDenied) throw error;
+
+    // Backward-compatible fallback for projects still running older Firestore rules
+    // that do not accept the `payment` field yet.
+    const legacyPayload = { ...payload };
+    delete legacyPayload.payment;
+    const ref = await addDoc(collection(db, "orders"), legacyPayload);
+    return ref.id;
+  }
 }
 
 async function addReservation(reservation) {
@@ -129,6 +154,18 @@ async function updateOrderStatus(id, status, staffUser) {
   });
 }
 
+async function updateOrderPaymentStatus(id, paymentStatus, staffUser) {
+  const ref = doc(db, "orders", id);
+  await updateDoc(ref, {
+    "payment.status": paymentStatus,
+    updatedAt: serverTimestamp(),
+    paymentUpdatedBy: {
+      uid: staffUser && staffUser.uid ? staffUser.uid : "",
+      email: staffUser && staffUser.email ? staffUser.email : ""
+    }
+  });
+}
+
 async function getStaffProfile(uid) {
   if (!uid) return null;
   const ref = doc(db, "staff", uid);
@@ -187,6 +224,7 @@ export {
   listenReservations,
   listenOrderById,
   updateOrderStatus,
+  updateOrderPaymentStatus,
   getStaffProfile,
   isStaffAuthorized,
   signInWithEmailPassword,

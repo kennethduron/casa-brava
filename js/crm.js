@@ -2,6 +2,7 @@
   listenOrders,
   listenReservations,
   updateOrderStatus,
+  updateOrderPaymentStatus,
   signInWithEmailPassword,
   getEmailByUsername,
   onAuthChange,
@@ -33,10 +34,22 @@ const i18n = {
     btnInProgress: "En preparacion",
     btnAccept: "Entregar",
     btnReject: "Rechazar",
+    btnMarkPaid: "Marcar pagado",
     review: "Revisar pedido",
     emptyOrders: "No hay pedidos en este estado.",
     emptyReservations: "No hay reservas registradas.",
     customer: "Cliente",
+    orderComments: "Comentarios del pedido",
+    payment: "Pago",
+    paymentMethod: "Metodo",
+    paymentStatus: "Estado",
+    payMethodOnline: "En linea",
+    payMethodCard: "Tarjeta",
+    payMethodPaypal: "PayPal",
+    payMethodCashOnPickup: "Pago al recoger",
+    payStatusPending: "Pendiente de confirmacion",
+    payStatusPaid: "Pagado",
+    payStatusUnpaid: "No pagado",
     total: "Total",
     date: "Fecha",
     status_pending: "Pendiente",
@@ -71,6 +84,8 @@ const i18n = {
     period_week: "Semana",
     period_month: "Mes",
     updated: "Estado actualizado",
+    paymentUpdated: "Pago actualizado",
+    paymentReceived: "Pago recibido",
     staffRole: "Rol",
     signOut: "Cerrar sesion",
     signOutShort: "Salir"
@@ -98,10 +113,22 @@ const i18n = {
     btnInProgress: "In preparation",
     btnAccept: "Deliver",
     btnReject: "Reject",
+    btnMarkPaid: "Mark paid",
     review: "Review order",
     emptyOrders: "No orders for this status.",
     emptyReservations: "No reservations found.",
     customer: "Customer",
+    orderComments: "Order comments",
+    payment: "Payment",
+    paymentMethod: "Method",
+    paymentStatus: "Status",
+    payMethodOnline: "Online",
+    payMethodCard: "Card",
+    payMethodPaypal: "PayPal",
+    payMethodCashOnPickup: "Pay on pickup",
+    payStatusPending: "Pending confirmation",
+    payStatusPaid: "Paid",
+    payStatusUnpaid: "Unpaid",
     total: "Total",
     date: "Date",
     status_pending: "Pending",
@@ -136,6 +163,8 @@ const i18n = {
     period_week: "Week",
     period_month: "Month",
     updated: "Status updated",
+    paymentUpdated: "Payment updated",
+    paymentReceived: "Payment received",
     staffRole: "Role",
     signOut: "Sign out",
     signOutShort: "Out"
@@ -191,6 +220,7 @@ let unsubscribeOrders = null;
 let unsubscribeReservations = null;
 let hasSeenInitialOrdersSnapshot = false;
 let knownOrderIds = new Set();
+let knownOrderPaymentStatus = new Map();
 let audioCtx = null;
 let audioUnlocked = false;
 
@@ -297,8 +327,35 @@ function notifyNewOrder(order) {
   }
 }
 
+function notifyPaymentReceived(order) {
+  const orderRef = `#${order.displayId || order.id.slice(0, 6)}`;
+  const customerName = order.customer?.name || "-";
+  const title = t("paymentReceived");
+  const body = `${orderRef} | ${customerName}`;
+  showToast(`${title}: ${orderRef}`);
+  if (!canUseBrowserNotifications() || Notification.permission !== "granted") return;
+  try {
+    new Notification(title, { body });
+  } catch (_e) {
+    // Ignore notification errors and keep toast feedback.
+  }
+}
+
 function orderStatusLabel(status) {
   return t(`status_${status}`);
+}
+
+function paymentMethodLabel(method) {
+  if (method === "paypal") return t("payMethodPaypal");
+  if (method === "card") return t("payMethodCard");
+  if (method === "online") return t("payMethodOnline");
+  return t("payMethodCashOnPickup");
+}
+
+function paymentStatusLabel(status) {
+  if (status === "paid") return t("payStatusPaid");
+  if (status === "pending") return t("payStatusPending");
+  return t("payStatusUnpaid");
 }
 
 function formatDate(value) {
@@ -606,6 +663,8 @@ function renderSalesCalendar() {
                         <div>
                           <strong>#${order.displayId || order.id.slice(0, 6)}</strong>
                           <p>${t("customer")}: ${order.customer?.name || "-"} (${order.customer?.phone || "-"})</p>
+                          <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
+                          <p>${t("payment")}: ${paymentMethodLabel(order.payment?.method)} | ${paymentStatusLabel(order.payment?.status)}</p>
                           <p>${timeLabel(order.createdAt)} | ${money(order.total)}</p>
                         </div>
                         <button class="btn btn-outline" data-review-order="${order.id}">${t("review")}</button>
@@ -657,6 +716,8 @@ function renderOrders() {
           <div>
             <strong>#${order.displayId || order.id.slice(0, 6)}</strong>
             <p>${t("customer")}: ${order.customer?.name || ""} (${order.customer?.phone || ""})</p>
+            <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
+            <p>${t("payment")}: ${paymentMethodLabel(order.payment?.method)} | ${paymentStatusLabel(order.payment?.status)}</p>
           </div>
           <span class="badge ${order.status}">${orderStatusLabel(order.status)}</span>
         </div>
@@ -666,6 +727,11 @@ function renderOrders() {
           <button class="btn btn-outline review-order" data-id="${order.id}">${t("review")}</button>
           <button class="btn btn-outline status-change" data-id="${order.id}" data-status="pending">${t("btnPending")}</button>
           <button class="btn btn-outline status-change" data-id="${order.id}" data-status="in_progress">${t("btnInProgress")}</button>
+          ${
+            order.payment?.method === "online" && order.payment?.status !== "paid"
+              ? `<button class="btn btn-outline payment-change" data-id="${order.id}" data-payment-status="paid">${t("btnMarkPaid")}</button>`
+              : ""
+          }
           <div class="final-actions">
             <button class="btn btn-primary status-change accept-main" data-id="${order.id}" data-status="accepted">${t("btnAccept")}</button>
             <button class="btn danger status-change reject-tiny" data-id="${order.id}" data-status="rejected">${t("btnReject")}</button>
@@ -708,6 +774,9 @@ function openReview(orderId) {
   reviewTitle.textContent = `#${order.displayId || order.id.slice(0, 6)}`;
   reviewBody.innerHTML = `
     <p>${t("customer")}: <strong>${order.customer?.name || ""}</strong> (${order.customer?.phone || ""})</p>
+    <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
+    <p>${t("paymentMethod")}: ${paymentMethodLabel(order.payment?.method)}</p>
+    <p>${t("paymentStatus")}: ${paymentStatusLabel(order.payment?.status)}</p>
     <p>${t("date")}: ${formatDate(order.createdAt)}</p>
     <p>${t("total")}: <strong>${money(order.total)}</strong></p>
     <ul>
@@ -734,6 +803,15 @@ async function setStatus(orderId, status) {
   }
 }
 
+async function setPaymentStatus(orderId, paymentStatus) {
+  try {
+    await updateOrderPaymentStatus(orderId, paymentStatus, currentStaffUser);
+    showToast(t("paymentUpdated"));
+  } catch (_e) {
+    showToast("Error");
+  }
+}
+
 function stopRealtime() {
   if (unsubscribeOrders) unsubscribeOrders();
   if (unsubscribeReservations) unsubscribeReservations();
@@ -741,6 +819,7 @@ function stopRealtime() {
   unsubscribeReservations = null;
   hasSeenInitialOrdersSnapshot = false;
   knownOrderIds = new Set();
+  knownOrderPaymentStatus = new Map();
 }
 
 function startRealtime() {
@@ -748,13 +827,24 @@ function startRealtime() {
   unsubscribeOrders = listenOrders(
     (orders) => {
       const nextIds = new Set(orders.map((order) => order.id));
+      const nextPaymentMap = new Map(orders.map((order) => [order.id, order.payment?.status || "unpaid"]));
       if (!hasSeenInitialOrdersSnapshot) {
         knownOrderIds = nextIds;
+        knownOrderPaymentStatus = nextPaymentMap;
         hasSeenInitialOrdersSnapshot = true;
       } else {
         const newOrders = orders.filter((order) => !knownOrderIds.has(order.id));
-        newOrders.forEach((order) => notifyNewOrder(order));
+        newOrders.forEach((order) => {
+          notifyNewOrder(order);
+          if ((order.payment?.status || "unpaid") === "paid") notifyPaymentReceived(order);
+        });
+        orders.forEach((order) => {
+          const previous = knownOrderPaymentStatus.get(order.id) || "unpaid";
+          const current = order.payment?.status || "unpaid";
+          if (previous !== "paid" && current === "paid") notifyPaymentReceived(order);
+        });
         knownOrderIds = nextIds;
+        knownOrderPaymentStatus = nextPaymentMap;
       }
 
       ordersCache = orders;
@@ -803,6 +893,8 @@ ordersList.addEventListener("click", (event) => {
   }
   const statusButton = event.target.closest(".status-change");
   if (statusButton) setStatus(statusButton.dataset.id, statusButton.dataset.status);
+  const paymentButton = event.target.closest(".payment-change");
+  if (paymentButton) setPaymentStatus(paymentButton.dataset.id, paymentButton.dataset.paymentStatus);
 });
 
 if (salesCalendar) {

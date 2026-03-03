@@ -36,6 +36,10 @@ const i18n = {
     tabMain: "Platos principales",
     tabBeverages: "Bebidas",
     tabDesserts: "Postres",
+    category_appetizers: "Entradas",
+    category_main_courses: "Platos principales",
+    category_beverages: "Bebidas",
+    category_desserts: "Postres",
     orderTitle: "Pedido rapido",
     orderText: "Agrega productos al carrito y envia el pedido a cocina con un clic.",
     reservationTitle: "Reserva de mesa",
@@ -47,8 +51,11 @@ const i18n = {
     fieldTime: "Hora",
     fieldParty: "Personas",
     fieldOccasion: "Ocasion",
+    fieldOccasionPlaceholder: "Cumpleanos, reunion, aniversario",
     fieldAllergies: "Alergias",
+    fieldAllergiesPlaceholder: "Gluten, lactosa, frutos secos",
     fieldNotes: "Notas especiales",
+    fieldNotesPlaceholder: "Mesa cerca de ventana, silla para bebe, etc.",
     btnReserve: "Enviar reserva",
     about1Title: "Atencion profesional",
     about1Text: "Equipo entrenado para tiempos de respuesta rapidos.",
@@ -60,7 +67,20 @@ const i18n = {
     cartTotal: "Total",
     orderCustomerName: "Nombre para el pedido",
     orderCustomerPhone: "Telefono de contacto",
+    orderCustomerComments: "Comentarios del pedido",
+    orderCustomerCommentsPlaceholder: "Alergias, sin picante, para llevar, etc.",
     btnSendKitchen: "Enviar a cocina",
+    btnPayNow: "Pagar ahora",
+    btnPayCashier: "Pagar en caja",
+    btnPay: "Pagar",
+    paymentChoiceTitle: "Metodo de pago",
+    paymentChoiceText: "Elige como deseas pagar este pedido para continuar.",
+    paypalTitle: "Pagar con PayPal",
+    paypalInstructions: "Agrega la informacion de tu tarjeta y luego toca Pagar ahora.",
+    cardNameLabel: "Nombre en la tarjeta",
+    cardNumberLabel: "Numero de tarjeta",
+    cardExpiryLabel: "Vencimiento (MM/AA)",
+    cardCvvLabel: "CVV",
     btnClear: "Vaciar",
     footerText: "Direccion, telefono y horarios actualizados.",
     add: "Agregar",
@@ -77,6 +97,12 @@ const i18n = {
     status_accepted: "Aceptado",
     status_rejected: "Rechazado",
     orderError: "No se pudo enviar el pedido. Intenta de nuevo.",
+    invalidCardData: "Completa los datos de tarjeta correctamente.",
+    paypalNotConfigured: "PayPal no esta configurado. Contacta al restaurante.",
+    paypalLoadError: "No se pudo cargar PayPal. Intenta nuevamente.",
+    paypalPaymentError: "No se pudo completar el pago con PayPal.",
+    paymentCashSent: "Pedido enviado a cocina. Estara completado aproximadamente en 15 minutos.",
+    paymentCardSent: "Pago aprobado. Pedido confirmado y listo aproximadamente en 15 minutos.",
     reservationError: "No se pudo enviar la reserva. Intenta de nuevo.",
     hnTimeLabel: "Hora en Honduras",
     hnWeatherLabel: "Clima en El Progreso",
@@ -112,6 +138,10 @@ const i18n = {
     tabMain: "Main Courses",
     tabBeverages: "Beverages",
     tabDesserts: "Desserts",
+    category_appetizers: "Appetizers",
+    category_main_courses: "Main Courses",
+    category_beverages: "Beverages",
+    category_desserts: "Desserts",
     orderTitle: "Quick order",
     orderText: "Add products to cart and send to kitchen in one click.",
     reservationTitle: "Table reservation",
@@ -123,8 +153,11 @@ const i18n = {
     fieldTime: "Time",
     fieldParty: "Guests",
     fieldOccasion: "Occasion",
+    fieldOccasionPlaceholder: "Birthday, meeting, anniversary",
     fieldAllergies: "Allergies",
+    fieldAllergiesPlaceholder: "Gluten, lactose, nuts",
     fieldNotes: "Special notes",
+    fieldNotesPlaceholder: "Window table, baby chair, etc.",
     btnReserve: "Send reservation",
     about1Title: "Professional service",
     about1Text: "Team trained for fast response times.",
@@ -136,7 +169,20 @@ const i18n = {
     cartTotal: "Total",
     orderCustomerName: "Order name",
     orderCustomerPhone: "Contact phone",
+    orderCustomerComments: "Order comments",
+    orderCustomerCommentsPlaceholder: "Allergies, no spice, takeaway, etc.",
     btnSendKitchen: "Send to kitchen",
+    btnPayNow: "Pay now",
+    btnPayCashier: "Pay at cashier",
+    btnPay: "Pay",
+    paymentChoiceTitle: "Payment method",
+    paymentChoiceText: "Choose how you want to pay this order to continue.",
+    paypalTitle: "Pay with PayPal",
+    paypalInstructions: "Add your card information and then tap Pay now.",
+    cardNameLabel: "Name on card",
+    cardNumberLabel: "Card number",
+    cardExpiryLabel: "Expiry (MM/YY)",
+    cardCvvLabel: "CVV",
     btnClear: "Clear",
     footerText: "Address, phone and opening hours up to date.",
     add: "Add",
@@ -153,6 +199,12 @@ const i18n = {
     status_accepted: "Accepted",
     status_rejected: "Rejected",
     orderError: "Could not send order. Please try again.",
+    invalidCardData: "Please complete valid card details.",
+    paypalNotConfigured: "PayPal is not configured. Please contact the restaurant.",
+    paypalLoadError: "Could not load PayPal. Please try again.",
+    paypalPaymentError: "Could not complete PayPal payment.",
+    paymentCashSent: "Order sent to kitchen. It will be completed in about 15 minutes.",
+    paymentCardSent: "Payment approved. Order confirmed and ready in about 15 minutes.",
     reservationError: "Could not send reservation. Please try again.",
     hnTimeLabel: "Honduras time",
     hnWeatherLabel: "Weather in El Progreso",
@@ -166,46 +218,46 @@ const i18n = {
 // Example:
 // { id: "a1", ..., price: 8.5, image: "assets/menu/bruschetta.jpg" }
 const menuItems = [
-  { id: "a1", category: "appetizers", title: { es: "Bruschetta clasica", en: "Classic bruschetta" }, price: 8.5, image: "assets/bruschetta-clasica.jpg" },
-  { id: "a2", category: "appetizers", title: { es: "Ceviche de pescado", en: "Fish ceviche" }, price: 11.5, image: "assets/ceviche-de-pescado.webp" },
-  { id: "a3", category: "appetizers", title: { es: "Carpaccio de res", en: "Beef carpaccio" }, price: 12.0, image: "assets/carpaccio-de-res.webp" },
-  { id: "a4", category: "appetizers", title: { es: "Croquetas de queso", en: "Cheese croquettes" }, price: 7.5, image: "assets/croquetas-de-queso.jpg" },
-  { id: "a5", category: "appetizers", title: { es: "Empanadas gourmet", en: "Gourmet empanadas" }, price: 8.0, image: "assets/empanada-gourmet.webp" },
-  { id: "a6", category: "appetizers", title: { es: "Tartar de atun", en: "Tuna tartare" }, price: 13.0, image: "assets/tartar-de-atun.jpg" },
-  { id: "a7", category: "appetizers", title: { es: "Ensalada mediterranea", en: "Mediterranean salad" }, price: 9.0, image: "assets/ensalada-mediterranea.jpg" },
-  { id: "a8", category: "appetizers", title: { es: "Sopa de temporada", en: "Seasonal soup" }, price: 7.0, image: "assets/sopa-de-temporada.jpg" },
-  { id: "a9", category: "appetizers", title: { es: "Tabla de quesos", en: "Cheese board" }, price: 14.0, image: "assets/tabla-de-quesos.jpg" },
-  { id: "a10", category: "appetizers", title: { es: "Pulpo a la plancha", en: "Grilled octopus" }, price: 15.0, image: "assets/pulpo-a-la-plancha.jpg" },
-  { id: "m1", category: "main_courses", title: { es: "Ribeye a la parrilla", en: "Grilled ribeye" }, price: 28.0, image: "assets/ribeye-a-la-parrilla.jpg" },
-  { id: "m2", category: "main_courses", title: { es: "Salmon glaseado", en: "Glazed salmon" }, price: 23.0, image: "assets/salmon-glaseado.jpg" },
-  { id: "m3", category: "main_courses", title: { es: "Pasta trufada", en: "Truffle pasta" }, price: 19.0, image: "assets/pasta-trufada.jpeg" },
-  { id: "m4", category: "main_courses", title: { es: "Pollo rostizado", en: "Roasted chicken" }, price: 18.0, image: "assets/pollo-rostizado.jpg" },
-  { id: "m5", category: "main_courses", title: { es: "Paella de mariscos", en: "Seafood paella" }, price: 27.0, image: "assets/paella-de-mariscos.jpg" },
-  { id: "m6", category: "main_courses", title: { es: "Lasagna artesanal", en: "Artisan lasagna" }, price: 16.0, image: "assets/lasagna-artesanal.jpg" },
-  { id: "m7", category: "main_courses", title: { es: "Hamburguesa premium", en: "Premium burger" }, price: 15.0, image: "assets/hamburguesa-premium.jpg" },
-  { id: "m8", category: "main_courses", title: { es: "Lomo en salsa", en: "Tenderloin in sauce" }, price: 24.0, image: "assets/lomo-en-salsa.jpg" },
-  { id: "m9", category: "main_courses", title: { es: "Arroz meloso", en: "Creamy rice" }, price: 20.0, image: "assets/arroz-meloso.jpg" },
-  { id: "m10", category: "main_courses", title: { es: "Costillas BBQ", en: "BBQ ribs" }, price: 22.0, image: "assets/costillas-bbq.jpg" },
-  { id: "b1", category: "beverages", title: { es: "Agua mineral", en: "Mineral water" }, price: 2.5, image: "assets/agua-mineral.jpg" },
-  { id: "b2", category: "beverages", title: { es: "Limonada natural", en: "Fresh lemonade" }, price: 4.0, image: "assets/limonada-natural.webp" },
-  { id: "b3", category: "beverages", title: { es: "Jugo verde", en: "Green juice" }, price: 5.0, image: "assets/jugo-verde.jpeg" },
-  { id: "b4", category: "beverages", title: { es: "Cafe espresso", en: "Espresso" }, price: 3.0, image: "assets/cafe-espresso.webp" },
-  { id: "b5", category: "beverages", title: { es: "Te herbal", en: "Herbal tea" }, price: 3.5, image: "assets/te-herbal.jpg" },
-  { id: "b6", category: "beverages", title: { es: "Cerveza artesanal", en: "Craft beer" }, price: 6.0, image: "assets/cerveza-artesanal.jpg" },
-  { id: "b7", category: "beverages", title: { es: "Vino tinto copa", en: "Red wine glass" }, price: 8.0, image: "assets/vino-tinto-copa.jpg" },
-  { id: "b8", category: "beverages", title: { es: "Vino blanco copa", en: "White wine glass" }, price: 8.0, image: "assets/vino-blanco-copa.jpg" },
-  { id: "b9", category: "beverages", title: { es: "Coctel de autor", en: "Signature cocktail" }, price: 10.0, image: "assets/coctel-de-autor.jpg" },
-  { id: "b10", category: "beverages", title: { es: "Mocktail tropical", en: "Tropical mocktail" }, price: 7.0, image: "assets/mocktail-tropical.jpg" },
-  { id: "d1", category: "desserts", title: { es: "Tiramisu", en: "Tiramisu" }, price: 7.5, image: "assets/tiramisu.jpg" },
-  { id: "d2", category: "desserts", title: { es: "Cheesecake", en: "Cheesecake" }, price: 7.0, image: "assets/cheesecake.jpg" },
-  { id: "d3", category: "desserts", title: { es: "Brownie caliente", en: "Warm brownie" }, price: 6.5, image: "assets/brownie-caliente.jpg" },
-  { id: "d4", category: "desserts", title: { es: "Helado artesanal", en: "Artisan ice cream" }, price: 5.0, image: "assets/helado-artesanal.jpg" },
-  { id: "d5", category: "desserts", title: { es: "Flan casero", en: "Homemade flan" }, price: 5.5, image: "assets/flan-casero.jpg" },
-  { id: "d6", category: "desserts", title: { es: "Pie de limon", en: "Lemon pie" }, price: 6.0, image: "assets/pie-de-limon.jpg" },
-  { id: "d7", category: "desserts", title: { es: "Creme brulee", en: "Creme brulee" }, price: 7.0, image: "assets/creme-brulee.jpg" },
-  { id: "d8", category: "desserts", title: { es: "Mousse de chocolate", en: "Chocolate mousse" }, price: 6.5, image: "assets/mousse-de-chocolate.jpg" },
-  { id: "d9", category: "desserts", title: { es: "Fruta fresca", en: "Fresh fruit" }, price: 5.0, image: "assets/fruta-fresca.webp" },
-  { id: "d10", category: "desserts", title: { es: "Coulant de cacao", en: "Chocolate coulant" }, price: 8.0, image: "assets/coulant-de-cacao.jpg" }
+  { id: "a1", category: "appetizers", title: { es: "Bruschetta clasica", en: "Classic bruschetta" }, price: 195, image: "assets/bruschetta-clasica.jpg" },
+  { id: "a2", category: "appetizers", title: { es: "Ceviche de pescado", en: "Fish ceviche" }, price: 280, image: "assets/ceviche-de-pescado.webp" },
+  { id: "a3", category: "appetizers", title: { es: "Carpaccio de res", en: "Beef carpaccio" }, price: 320, image: "assets/carpaccio-de-res.webp" },
+  { id: "a4", category: "appetizers", title: { es: "Croquetas de queso", en: "Cheese croquettes" }, price: 175, image: "assets/croquetas-de-queso.jpg" },
+  { id: "a5", category: "appetizers", title: { es: "Empanadas gourmet", en: "Gourmet empanadas" }, price: 190, image: "assets/empanada-gourmet.webp" },
+  { id: "a6", category: "appetizers", title: { es: "Tartar de atun", en: "Tuna tartare" }, price: 340, image: "assets/tartar-de-atun.jpg" },
+  { id: "a7", category: "appetizers", title: { es: "Ensalada mediterranea", en: "Mediterranean salad" }, price: 210, image: "assets/ensalada-mediterranea.jpg" },
+  { id: "a8", category: "appetizers", title: { es: "Sopa de temporada", en: "Seasonal soup" }, price: 165, image: "assets/sopa-de-temporada.jpg" },
+  { id: "a9", category: "appetizers", title: { es: "Tabla de quesos", en: "Cheese board" }, price: 360, image: "assets/tabla-de-quesos.jpg" },
+  { id: "a10", category: "appetizers", title: { es: "Pulpo a la plancha", en: "Grilled octopus" }, price: 395, image: "assets/pulpo-a-la-plancha.jpg" },
+  { id: "m1", category: "main_courses", title: { es: "Ribeye a la parrilla", en: "Grilled ribeye" }, price: 780, image: "assets/ribeye-a-la-parrilla.jpg" },
+  { id: "m2", category: "main_courses", title: { es: "Salmon glaseado", en: "Glazed salmon" }, price: 620, image: "assets/salmon-glaseado.jpg" },
+  { id: "m3", category: "main_courses", title: { es: "Pasta trufada", en: "Truffle pasta" }, price: 450, image: "assets/pasta-trufada.jpeg" },
+  { id: "m4", category: "main_courses", title: { es: "Pollo rostizado", en: "Roasted chicken" }, price: 390, image: "assets/pollo-rostizado.jpg" },
+  { id: "m5", category: "main_courses", title: { es: "Paella de mariscos", en: "Seafood paella" }, price: 690, image: "assets/paella-de-mariscos.jpg" },
+  { id: "m6", category: "main_courses", title: { es: "Lasagna artesanal", en: "Artisan lasagna" }, price: 360, image: "assets/lasagna-artesanal.jpg" },
+  { id: "m7", category: "main_courses", title: { es: "Hamburguesa premium", en: "Premium burger" }, price: 340, image: "assets/hamburguesa-premium.jpg" },
+  { id: "m8", category: "main_courses", title: { es: "Lomo en salsa", en: "Tenderloin in sauce" }, price: 640, image: "assets/lomo-en-salsa.jpg" },
+  { id: "m9", category: "main_courses", title: { es: "Arroz meloso", en: "Creamy rice" }, price: 430, image: "assets/arroz-meloso.jpg" },
+  { id: "m10", category: "main_courses", title: { es: "Costillas BBQ", en: "BBQ ribs" }, price: 590, image: "assets/costillas-bbq.jpg" },
+  { id: "b1", category: "beverages", title: { es: "Agua mineral", en: "Mineral water" }, price: 55, image: "assets/agua-mineral.jpg" },
+  { id: "b2", category: "beverages", title: { es: "Limonada natural", en: "Fresh lemonade" }, price: 95, image: "assets/limonada-natural.webp" },
+  { id: "b3", category: "beverages", title: { es: "Jugo verde", en: "Green juice" }, price: 120, image: "assets/jugo-verde.jpeg" },
+  { id: "b4", category: "beverages", title: { es: "Cafe espresso", en: "Espresso" }, price: 80, image: "assets/cafe-espresso.webp" },
+  { id: "b5", category: "beverages", title: { es: "Te herbal", en: "Herbal tea" }, price: 75, image: "assets/te-herbal.jpg" },
+  { id: "b6", category: "beverages", title: { es: "Cerveza artesanal", en: "Craft beer" }, price: 140, image: "assets/cerveza-artesanal.jpg" },
+  { id: "b7", category: "beverages", title: { es: "Vino tinto copa", en: "Red wine glass" }, price: 190, image: "assets/vino-tinto-copa.jpg" },
+  { id: "b8", category: "beverages", title: { es: "Vino blanco copa", en: "White wine glass" }, price: 190, image: "assets/vino-blanco-copa.jpg" },
+  { id: "b9", category: "beverages", title: { es: "Coctel de autor", en: "Signature cocktail" }, price: 240, image: "assets/coctel-de-autor.jpg" },
+  { id: "b10", category: "beverages", title: { es: "Mocktail tropical", en: "Tropical mocktail" }, price: 180, image: "assets/mocktail-tropical.jpg" },
+  { id: "d1", category: "desserts", title: { es: "Tiramisu", en: "Tiramisu" }, price: 180, image: "assets/tiramisu.jpg" },
+  { id: "d2", category: "desserts", title: { es: "Cheesecake", en: "Cheesecake" }, price: 165, image: "assets/cheesecake.jpg" },
+  { id: "d3", category: "desserts", title: { es: "Brownie caliente", en: "Warm brownie" }, price: 150, image: "assets/brownie-caliente.jpg" },
+  { id: "d4", category: "desserts", title: { es: "Helado artesanal", en: "Artisan ice cream" }, price: 130, image: "assets/helado-artesanal.jpg" },
+  { id: "d5", category: "desserts", title: { es: "Flan casero", en: "Homemade flan" }, price: 120, image: "assets/flan-casero.jpg" },
+  { id: "d6", category: "desserts", title: { es: "Pie de limon", en: "Lemon pie" }, price: 145, image: "assets/pie-de-limon.jpg" },
+  { id: "d7", category: "desserts", title: { es: "Creme brulee", en: "Creme brulee" }, price: 170, image: "assets/creme-brulee.jpg" },
+  { id: "d8", category: "desserts", title: { es: "Mousse de chocolate", en: "Chocolate mousse" }, price: 155, image: "assets/mousse-de-chocolate.jpg" },
+  { id: "d9", category: "desserts", title: { es: "Fruta fresca", en: "Fresh fruit" }, price: 110, image: "assets/fruta-fresca.webp" },
+  { id: "d10", category: "desserts", title: { es: "Coulant de cacao", en: "Chocolate coulant" }, price: 185, image: "assets/coulant-de-cacao.jpg" }
 ];
 const categoryImageMap = {
   appetizers: "assets/entradas.svg",
@@ -224,6 +276,18 @@ const cartCount = document.getElementById("cartCount");
 const cartTotal = document.getElementById("cartTotal");
 const clearCart = document.getElementById("clearCart");
 const sendToKitchenBtn = document.getElementById("sendToKitchen");
+const paymentChoiceModal = document.getElementById("paymentChoiceModal");
+const closePaymentChoiceBtn = document.getElementById("closePaymentChoice");
+const choosePayNowBtn = document.getElementById("choosePayNow");
+const choosePayCashBtn = document.getElementById("choosePayCash");
+const paypalPaymentModal = document.getElementById("paypalPaymentModal");
+const closePaypalPaymentBtn = document.getElementById("closePaypalPayment");
+const cardFallbackForm = document.getElementById("cardFallbackForm");
+const cardNameInput = document.getElementById("cardName");
+const cardNumberInput = document.getElementById("cardNumber");
+const cardExpiryInput = document.getElementById("cardExpiry");
+const cardCvvInput = document.getElementById("cardCvv");
+const paypalButtonsContainer = document.getElementById("paypalButtonsContainer");
 const toast = document.getElementById("toast");
 const tracker = document.getElementById("orderTracker");
 const reservationForm = document.getElementById("reservationForm");
@@ -247,6 +311,11 @@ let weatherState = { loading: true, error: false, temperature: null, weatherCode
 
 const HONDURAS_TIMEZONE = "America/Tegucigalpa";
 const WEATHER_ENDPOINT = "https://api.open-meteo.com/v1/forecast?latitude=15.4012&longitude=-87.8000&current=temperature_2m,weather_code&timezone=America%2FTegucigalpa";
+const PAYPAL_CLIENT_ID = (document.querySelector('meta[name="paypal-client-id"]')?.content || "").trim();
+const PAYPAL_CURRENCY = (document.querySelector('meta[name="paypal-currency"]')?.content || "USD").trim().toUpperCase();
+
+let paypalSdkPromise = null;
+let isSubmittingOrder = false;
 
 function read(key, fallback) {
   try {
@@ -404,6 +473,9 @@ function applyI18n() {
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     node.textContent = t(node.dataset.i18n);
   });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+    node.placeholder = t(node.dataset.i18nPlaceholder);
+  });
   renderMenu();
   renderCart();
   renderTracker();
@@ -416,6 +488,9 @@ function filteredMenu() {
 }
 
 function categoryLabel(category) {
+  const key = `category_${String(category || "")}`;
+  const translated = t(key);
+  if (translated !== key) return translated;
   return String(category || "").replace(/_/g, " ");
 }
 
@@ -452,6 +527,26 @@ function closeDrawer() {
   drawer.classList.remove("open");
   drawer.setAttribute("aria-hidden", "true");
   overlay.classList.add("hidden");
+  closePaymentChoiceModal();
+  closePaypalPaymentModal();
+}
+
+function openPaymentChoiceModal() {
+  paymentChoiceModal?.classList.remove("hidden");
+}
+
+function closePaymentChoiceModal() {
+  paymentChoiceModal?.classList.add("hidden");
+}
+
+function openPaypalPaymentModal() {
+  paypalPaymentModal?.classList.remove("hidden");
+}
+
+function closePaypalPaymentModal() {
+  paypalPaymentModal?.classList.add("hidden");
+  if (paypalButtonsContainer) paypalButtonsContainer.innerHTML = "";
+  if (cardFallbackForm) cardFallbackForm.reset();
 }
 
 function animateAddToCart(sourceEl, message) {
@@ -670,20 +765,158 @@ function addRecentOrderId(orderId) {
   syncTrackerSubscriptions();
 }
 
-async function submitOrder() {
-  if (!cart.length) return;
+function buildPaymentDetails(mode, paymentMeta = {}) {
+  if (mode === "paypal_paid") {
+    return {
+      method: "paypal",
+      status: "paid",
+      provider: "paypal",
+      checkoutUrl: "",
+      cardLast4: "",
+      transactionId: paymentMeta.transactionId || "",
+      paypalOrderId: paymentMeta.paypalOrderId || ""
+    };
+  }
+  if (mode === "card_paid") {
+    return {
+      method: "card",
+      status: "paid",
+      provider: "manual_card_entry",
+      checkoutUrl: "",
+      cardLast4: paymentMeta.cardLast4 || "",
+      transactionId: paymentMeta.transactionId || "",
+      paypalOrderId: ""
+    };
+  }
+  return {
+    method: "cash_on_pickup",
+    status: "unpaid",
+    provider: "in_store",
+    checkoutUrl: "",
+    cardLast4: "",
+    transactionId: "",
+    paypalOrderId: ""
+  };
+}
+
+function normalizeCardNumber(value) {
+  return String(value || "").replace(/\D/g, "");
+}
+
+function validateCardForm() {
+  const cardName = (cardNameInput?.value || "").trim();
+  const cardNumber = normalizeCardNumber(cardNumberInput?.value || "");
+  const cardExpiry = (cardExpiryInput?.value || "").trim();
+  const cardCvv = String(cardCvvInput?.value || "").trim();
+  const validExpiry = /^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExpiry);
+  const validNumber = cardNumber.length >= 13 && cardNumber.length <= 19;
+  const validCvv = /^\d{3,4}$/.test(cardCvv);
+  if (!cardName || !validNumber || !validExpiry || !validCvv) return null;
+  return { cardLast4: cardNumber.slice(-4) };
+}
+
+function validateCustomerForOrder() {
   const customerName = (document.getElementById("orderCustomerName").value || "").trim();
   const customerPhone = (document.getElementById("orderCustomerPhone").value || "").trim();
+  const customerComments = (document.getElementById("orderCustomerComments")?.value || "").trim();
   if (!customerName || !customerPhone) {
     showToast(t("needCustomer"));
-    return;
+    return null;
   }
+  return { customerName, customerPhone, customerComments };
+}
+
+function loadPayPalSdk() {
+  if (!PAYPAL_CLIENT_ID) return Promise.reject(new Error("paypal_not_configured"));
+  if (window.paypal) return Promise.resolve(window.paypal);
+  if (paypalSdkPromise) return paypalSdkPromise;
+
+  paypalSdkPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-paypal-sdk="true"]');
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.paypal));
+      existing.addEventListener("error", () => reject(new Error("paypal_sdk_load_error")));
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID)}&currency=${encodeURIComponent(PAYPAL_CURRENCY)}&intent=capture`;
+    script.async = true;
+    script.dataset.paypalSdk = "true";
+    script.addEventListener("load", () => resolve(window.paypal));
+    script.addEventListener("error", () => reject(new Error("paypal_sdk_load_error")));
+    document.head.appendChild(script);
+  });
+
+  return paypalSdkPromise;
+}
+
+async function renderPayPalButtons() {
+  const customer = validateCustomerForOrder();
+  if (!customer) return;
+  if (!paypalButtonsContainer) return;
+  if (cardFallbackForm) cardFallbackForm.classList.remove("hidden");
+  const total = cart.reduce((sum, row) => sum + row.qty * row.price, 0);
+  if (!total) return;
+
+  paypalButtonsContainer.innerHTML = "";
+  try {
+    const paypal = await loadPayPalSdk();
+    if (!paypal || !paypal.Buttons) throw new Error("paypal_sdk_unavailable");
+    paypal
+      .Buttons({
+        style: {
+          layout: "vertical",
+          color: "gold",
+          shape: "rect",
+          label: "pay"
+        },
+        createOrder: (_data, actions) =>
+          actions.order.create({
+            purchase_units: [
+              {
+                amount: {
+                  currency_code: PAYPAL_CURRENCY,
+                  value: total.toFixed(2)
+                }
+              }
+            ]
+          }),
+        onApprove: async (data, actions) => {
+          const capture = await actions.order.capture();
+          const transactionId = capture?.purchase_units?.[0]?.payments?.captures?.[0]?.id || "";
+          const paid = await submitOrderWithMode(
+            "paypal_paid",
+            { transactionId, paypalOrderId: data?.orderID || "" },
+            { showConfirmation: false }
+          );
+          if (paid) showCenterNotice(t("paymentCardSent"));
+        },
+        onError: () => {
+          showToast(t("paypalPaymentError"));
+        },
+        onCancel: () => {}
+      })
+      .render("#paypalButtonsContainer");
+  } catch (error) {
+    const missingConfig = error.message === "paypal_not_configured";
+    showToast(missingConfig ? t("paypalNotConfigured") : t("paypalLoadError"));
+  }
+}
+
+async function submitOrderWithMode(mode, paymentMeta = {}, options = {}) {
+  const { showConfirmation = true } = options;
+  if (!cart.length) return false;
+  if (isSubmittingOrder) return false;
+  const customer = validateCustomerForOrder();
+  if (!customer) return false;
+  isSubmittingOrder = true;
 
   const orderPayload = {
     language: lang,
-    customer: { name: customerName, phone: customerPhone },
+    customer: { name: customer.customerName, phone: customer.customerPhone, comments: customer.customerComments },
     items: cart,
-    total: cart.reduce((sum, row) => sum + row.qty * row.price, 0)
+    total: cart.reduce((sum, row) => sum + row.qty * row.price, 0),
+    payment: buildPaymentDetails(mode, paymentMeta)
   };
 
   try {
@@ -692,10 +925,20 @@ async function submitOrder() {
     cart = [];
     write(STORAGE.cart, cart);
     renderCart();
+    const commentsField = document.getElementById("orderCustomerComments");
+    if (commentsField) commentsField.value = "";
+    closePaypalPaymentModal();
+    closePaymentChoiceModal();
     closeDrawer();
-    showCenterNotice(t("orderSent"));
+    if (showConfirmation) {
+      showCenterNotice(mode === "paypal_paid" ? t("paymentCardSent") : t("paymentCashSent"));
+    }
+    return true;
   } catch (_e) {
     showToast(t("orderError"));
+    return false;
+  } finally {
+    isSubmittingOrder = false;
   }
 }
 
@@ -781,7 +1024,41 @@ clearCart.addEventListener("click", () => {
   write(STORAGE.cart, cart);
   renderCart();
 });
-sendToKitchenBtn.addEventListener("click", submitOrder);
+sendToKitchenBtn.addEventListener("click", () => {
+  if (!cart.length) return;
+  const customer = validateCustomerForOrder();
+  if (!customer) return;
+  openPaymentChoiceModal();
+});
+closePaymentChoiceBtn?.addEventListener("click", closePaymentChoiceModal);
+choosePayCashBtn?.addEventListener("click", async () => {
+  closePaymentChoiceModal();
+  const sent = await submitOrderWithMode("cash_on_pickup", {}, { showConfirmation: false });
+  if (sent) showCenterNotice(t("paymentCashSent"));
+});
+choosePayNowBtn?.addEventListener("click", () => {
+  closePaymentChoiceModal();
+  showToast(t("paypalInstructions"), { duration: 2600 });
+  openPaypalPaymentModal();
+  renderPayPalButtons();
+});
+closePaypalPaymentBtn?.addEventListener("click", closePaypalPaymentModal);
+if (cardFallbackForm) {
+  cardFallbackForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const card = validateCardForm();
+    if (!card) {
+      showToast(t("invalidCardData"));
+      return;
+    }
+    const paid = await submitOrderWithMode(
+      "card_paid",
+      { cardLast4: card.cardLast4, transactionId: `manual_${Date.now()}` },
+      { showConfirmation: false }
+    );
+    if (paid) showCenterNotice(t("paymentCardSent"));
+  });
+}
 reservationForm.addEventListener("submit", submitReservation);
 
 recentOrderIds = readRecentOrderIds();

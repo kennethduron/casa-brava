@@ -23,6 +23,8 @@
     <meta name="twitter:description" content="Menu bilingue, pedidos rapidos y reservas de mesa en un solo lugar.">
     <meta name="twitter:image" content="https://casabrava.web.app/assets/casa-brava-logo.jpg">
     <meta name="twitter:url" content="https://casabrava.web.app/">
+    <meta name="paypal-client-id" content="">
+    <meta name="paypal-currency" content="USD">
     <link rel="canonical" href="https://casabrava.web.app/">
     <link rel="icon" type="image/jpeg" href="assets/icon.jpg">
     <link rel="shortcut icon" href="assets/icon.jpg">
@@ -30,7 +32,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=20260226">
     <script type="application/ld+json">
@@ -58,10 +60,10 @@
         <div class="container nav-wrap">
             <a class="brand" href="#inicio">Casa Brava</a>
             <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="primaryNav"
-                aria-label="Abrir menu">
+                aria-label="Abrir menu / Open menu">
                 &#9776;
             </button>
-            <nav id="primaryNav" aria-label="Primary navigation">
+            <nav id="primaryNav" aria-label="Navegacion principal / Primary navigation">
                 <ul class="nav-list">
                     <li><a href="#menu" data-i18n="navMenu">Menu</a></li>
                     <li><a href="#pedido" data-i18n="navOrder">Pedido</a></li>
@@ -69,7 +71,7 @@
                     <li><a href="#nosotros" data-i18n="navAbout">Nosotros</a></li>
                 </ul>
             </nav>
-            <button id="langToggle" class="btn btn-ghost" aria-label="Cambiar idioma">EN</button>
+            <button id="langToggle" class="btn btn-ghost" aria-label="Cambiar idioma / Change language">EN</button>
         </div>
     </header>
 
@@ -133,7 +135,7 @@
                 <p data-i18n="menuText">Categorias formales: Entradas, Platos principales, Bebidas y Postres.</p>
             </div>
 
-            <div class="menu-tabs" role="tablist" aria-label="Categorias del menu">
+            <div class="menu-tabs" role="tablist" aria-label="Categorias del menu / Menu categories">
                 <button class="chip active" data-category="all" data-i18n="tabAll">Todo</button>
                 <button class="chip" data-category="appetizers" data-i18n="tabAppetizers">Entradas</button>
                 <button class="chip" data-category="main_courses" data-i18n="tabMain">Platos principales</button>
@@ -185,16 +187,18 @@
                 </label>
                 <label>
                     <span data-i18n="fieldOccasion">Ocasion</span>
-                    <input name="occasion" placeholder="Cumpleanos, reunion, aniversario">
+                    <input name="occasion" data-i18n-placeholder="fieldOccasionPlaceholder"
+                        placeholder="Cumpleanos, reunion, aniversario / Birthday, meeting, anniversary">
                 </label>
                 <label>
                     <span data-i18n="fieldAllergies">Alergias</span>
-                    <input name="allergies" placeholder="Gluten, lactosa, frutos secos">
+                    <input name="allergies" data-i18n-placeholder="fieldAllergiesPlaceholder"
+                        placeholder="Gluten, lactosa, frutos secos / Gluten, lactose, nuts">
                 </label>
                 <label class="full">
                     <span data-i18n="fieldNotes">Notas especiales</span>
-                    <textarea name="notes" rows="4"
-                        placeholder="Mesa cerca de ventana, silla para bebe, etc."></textarea>
+                    <textarea name="notes" rows="4" data-i18n-placeholder="fieldNotesPlaceholder"
+                        placeholder="Mesa cerca de ventana, silla para bebe, etc. / Window table, baby chair, etc."></textarea>
                 </label>
                 <button type="submit" class="btn btn-primary" data-i18n="btnReserve">Enviar reserva</button>
             </form>
@@ -217,7 +221,7 @@
     </main>
 
     <div class="cart-floating">
-        <button id="cartBtn" class="cart-button" aria-label="Abrir carrito">
+        <button id="cartBtn" class="cart-button" aria-label="Abrir carrito / Open cart">
             <span aria-hidden="true">&#128722;</span>
             <strong id="cartCount">0</strong>
         </button>
@@ -228,7 +232,7 @@
     <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
         <header>
             <h3 data-i18n="cartTitle">Carrito</h3>
-            <button id="closeCart" class="btn btn-ghost" aria-label="Cerrar">X</button>
+            <button id="closeCart" class="btn btn-ghost" aria-label="Cerrar / Close">X</button>
         </header>
         <div id="cartItems" class="cart-items"></div>
         <div class="cart-customer">
@@ -240,6 +244,11 @@
                 <span data-i18n="orderCustomerPhone">Telefono de contacto</span>
                 <input id="orderCustomerPhone" type="tel">
             </label>
+            <label>
+                <span data-i18n="orderCustomerComments">Comentarios del pedido</span>
+                <textarea id="orderCustomerComments" rows="3" data-i18n-placeholder="orderCustomerCommentsPlaceholder"
+                    placeholder="Alergias, sin picante, para llevar, etc. / Allergies, no spice, takeaway, etc."></textarea>
+            </label>
         </div>
         <footer>
             <p><span data-i18n="cartTotal">Total</span>: <strong id="cartTotal">L 0.00</strong></p>
@@ -250,13 +259,59 @@
         </footer>
     </aside>
 
+    <div id="paymentChoiceModal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <header>
+                <h3 data-i18n="paymentChoiceTitle">Metodo de pago</h3>
+                <button id="closePaymentChoice" class="btn btn-ghost" aria-label="Cerrar / Close">X</button>
+            </header>
+            <p data-i18n="paymentChoiceText">Elige como deseas pagar este pedido para continuar.</p>
+            <div class="cart-actions">
+                <button id="choosePayNow" class="btn btn-primary" data-i18n="btnPayNow">Pagar ahora</button>
+                <button id="choosePayCash" class="btn btn-outline" data-i18n="btnPayCashier">Pagar en caja</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="paypalPaymentModal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <header>
+                <h3 data-i18n="paypalTitle">Pagar con PayPal</h3>
+                <button id="closePaypalPayment" class="btn btn-ghost" aria-label="Cerrar / Close">X</button>
+            </header>
+            <p data-i18n="paypalInstructions">Completa el pago seguro con PayPal o tarjeta.</p>
+            <form id="cardFallbackForm" class="reservation-form" novalidate>
+                <label class="full">
+                    <span data-i18n="cardNameLabel">Nombre en la tarjeta</span>
+                    <input id="cardName" type="text" required>
+                </label>
+                <label class="full">
+                    <span data-i18n="cardNumberLabel">Numero de tarjeta</span>
+                    <input id="cardNumber" type="text" inputmode="numeric" maxlength="19" required placeholder="1234 5678 9012 3456">
+                </label>
+                <label>
+                    <span data-i18n="cardExpiryLabel">Vencimiento (MM/AA)</span>
+                    <input id="cardExpiry" type="text" inputmode="numeric" maxlength="5" required placeholder="MM/AA">
+                </label>
+                <label>
+                    <span data-i18n="cardCvvLabel">CVV</span>
+                    <input id="cardCvv" type="password" inputmode="numeric" maxlength="4" required placeholder="123">
+                </label>
+                <div class="full cart-actions">
+                    <button id="confirmCardFallbackPayment" type="submit" class="btn btn-primary" data-i18n="btnPayNow">Pagar ahora</button>
+                </div>
+            </form>
+            <div id="paypalButtonsContainer"></div>
+        </div>
+    </div>
+
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <footer class="site-footer">
         <div class="container footer-wrap">
             <p>Casa Brava</p>
             <p data-i18n="footerText">Direccion, telefono y horarios actualizados.</p>
-            <nav class="footer-social" aria-label="Redes sociales">
+            <nav class="footer-social" aria-label="Redes sociales / Social media">
                 <a class="social-link" href="https://instagram.com" target="_blank" rel="noopener noreferrer"
                     aria-label="Instagram">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -281,7 +336,7 @@
         </div>
     </footer>
 
-    <script type="module" src="js/app.js?v=20260225"></script>
+    <script type="module" src="js/app.js?v=20260303"></script>
 </body>
 
 </html>

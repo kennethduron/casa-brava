@@ -71,7 +71,11 @@ h4 {
 .brand {
   text-decoration: none;
   color: var(--ink);
-  font-weight: 800;
+  font-family: "Cormorant Garamond", "Fraunces", Georgia, serif;
+  font-size: clamp(calc(1.9rem - 8px), calc(3vw - 8px), calc(2.25rem - 8px));
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
 }
 
 .nav-toggle {
@@ -1254,6 +1258,7 @@ textarea:focus {
 
   .brand {
     order: 1;
+    font-size: calc(2rem - 8px);
   }
 
   .nav-toggle {
