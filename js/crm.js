@@ -366,17 +366,22 @@ function paymentStatusLabel(status) {
   return t("payStatusUnpaid");
 }
 
+function paymentDone(order) {
+  return order?.payment?.status === "paid";
+}
+
 function crmPaymentLine(order) {
-  const paymentDone = order?.payment?.status === "paid";
-  const paymentText = paymentDone ? t("orderPaidMessage") : t("orderUnpaidMessage");
+  const done = paymentDone(order);
+  const paymentText = done ? t("orderPaidMessage") : t("orderUnpaidMessage");
   if (order?.customer?.pickup) {
     return `${t("orderPickupBadge")} | ${paymentText}`;
   }
-  if (order?.payment?.method === "cash_on_pickup" && !paymentDone) {
+  if (order?.payment?.method === "cash_on_pickup" && !done) {
     return t("orderCashierPending");
   }
   return paymentText;
 }
+
 
 function formatDate(value) {
   if (!value) return "-";
@@ -936,7 +941,9 @@ if (salesCalendar) {
     const reviewBtn = event.target.closest("[data-review-order]");
     if (reviewBtn) {
       openReview(reviewBtn.dataset.reviewOrder);
+      return;
     }
+
   });
 }
 
