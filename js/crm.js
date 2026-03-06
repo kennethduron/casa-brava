@@ -21,6 +21,7 @@ const i18n = {
     authUserNotFound: "Usuario no encontrado.",
     authDenied: "Tu usuario no tiene permisos CRM. Contacta al administrador.",
     authChecking: "Validando acceso...",
+    kitchenScreen: "Pantalla cocina",
     crmTitle: "Panel de pedidos y reservas",
     crmSub: "Gestion operacional en tiempo real para representantes.",
     viewOrders: "Pedidos",
@@ -28,10 +29,12 @@ const i18n = {
     filterAll: "Todos",
     filterPending: "Pendiente",
     filterInProgress: "En preparacion",
+    filterReady: "Listo",
     filterAccepted: "Entregado",
     filterRejected: "Rechazado",
     btnPending: "Pendiente",
     btnInProgress: "En preparacion",
+    btnReady: "Listo",
     btnAccept: "Entregar",
     btnReject: "Rechazar",
     btnMarkPaid: "Marcar pagado",
@@ -58,12 +61,14 @@ const i18n = {
     date: "Fecha",
     status_pending: "Pendiente",
     status_in_progress: "En preparacion",
+    status_ready: "Listo",
     status_accepted: "Entregado",
     status_rejected: "Rechazado",
     reservationsCount: "Reservas",
     ordersCount: "Pedidos",
     pendingCount: "Pendientes",
     progressCount: "En preparacion",
+    readyCount: "Listos",
     acceptedCount: "Entregados",
     revenueCount: "Ingresos",
     avgTicket: "Ticket promedio",
@@ -104,6 +109,7 @@ const i18n = {
     authUserNotFound: "Username not found.",
     authDenied: "Your user does not have CRM permissions. Contact the admin.",
     authChecking: "Validating access...",
+    kitchenScreen: "Kitchen screen",
     crmTitle: "Orders and reservations dashboard",
     crmSub: "Real-time operations view for representatives.",
     viewOrders: "Orders",
@@ -111,10 +117,12 @@ const i18n = {
     filterAll: "All",
     filterPending: "Pending",
     filterInProgress: "In preparation",
+    filterReady: "Ready",
     filterAccepted: "Delivered",
     filterRejected: "Rejected",
     btnPending: "Pending",
     btnInProgress: "In preparation",
+    btnReady: "Ready",
     btnAccept: "Deliver",
     btnReject: "Reject",
     btnMarkPaid: "Mark paid",
@@ -141,12 +149,14 @@ const i18n = {
     date: "Date",
     status_pending: "Pending",
     status_in_progress: "In preparation",
+    status_ready: "Ready",
     status_accepted: "Delivered",
     status_rejected: "Rejected",
     reservationsCount: "Reservations",
     ordersCount: "Orders",
     pendingCount: "Pending",
     progressCount: "In preparation",
+    readyCount: "Ready",
     acceptedCount: "Delivered",
     revenueCount: "Revenue",
     avgTicket: "Average ticket",
@@ -460,6 +470,7 @@ function renderStats() {
   const periodReservations = reservationsForPeriod();
   const pending = periodOrders.filter((o) => o.status === "pending").length;
   const progress = periodOrders.filter((o) => o.status === "in_progress").length;
+  const ready = periodOrders.filter((o) => o.status === "ready").length;
   const acceptedOrders = periodOrders.filter((o) => o.status === "accepted");
   const revenue = acceptedOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
   const avgTicket = acceptedOrders.length ? revenue / acceptedOrders.length : 0;
@@ -475,6 +486,7 @@ function renderStats() {
             <article class="stat-card tone-neutral"><p>${t("ordersCount")}</p><h3>${periodOrders.length}</h3></article>
             <article class="stat-card tone-warn"><p>${t("pendingCount")}</p><h3>${pending}</h3></article>
             <article class="stat-card tone-progress"><p>${t("progressCount")}</p><h3>${progress}</h3></article>
+            <article class="stat-card tone-ready"><p>${t("readyCount")}</p><h3>${ready}</h3></article>
             <article class="stat-card tone-ok"><p>${t("acceptedCount")}</p><h3>${acceptedOrders.length}</h3></article>
             <article class="stat-card tone-neutral"><p>${t("reservationsCount")}</p><h3>${periodReservations.length}</h3></article>
           </div>
@@ -752,6 +764,7 @@ function renderOrders() {
           <button class="btn btn-outline review-order" data-id="${order.id}">${t("review")}</button>
           <button class="btn btn-outline status-change" data-id="${order.id}" data-status="pending">${t("btnPending")}</button>
           <button class="btn btn-outline status-change" data-id="${order.id}" data-status="in_progress">${t("btnInProgress")}</button>
+          <button class="btn btn-outline status-change" data-id="${order.id}" data-status="ready">${t("btnReady")}</button>
           ${
             order.payment?.method === "online" && order.payment?.status !== "paid"
               ? `<button class="btn btn-outline payment-change" data-id="${order.id}" data-payment-status="paid">${t("btnMarkPaid")}</button>`
