@@ -3,6 +3,9 @@
   listenReservations,
   updateOrderStatus,
   updateOrderPaymentStatus,
+  updateOrderPaymentDetails,
+  updateOrderStaffNotes,
+  updateReservationDetails,
   signInWithEmailPassword,
   getEmailByUsername,
   onAuthChange,
@@ -26,6 +29,9 @@ const i18n = {
     crmSub: "Gestion operacional en tiempo real para representantes.",
     viewOrders: "Pedidos",
     viewReservations: "Reservas",
+    searchLabel: "Buscar",
+    searchPlaceholder: "Buscar por pedido, cliente, telefono, mesa o reserva",
+    exportCurrentCsv: "Exportar CSV",
     filterAll: "Todos",
     filterPending: "Pendiente",
     filterInProgress: "En preparacion",
@@ -35,21 +41,33 @@ const i18n = {
     btnPending: "Pendiente",
     btnInProgress: "En preparacion",
     btnReady: "Listo",
+    btnBack: "Atras",
+    btnNext: "Seguir",
+    btnReopen: "Reabrir",
+    btnReactivate: "Reactivar",
     btnAccept: "Entregar",
     btnReject: "Rechazar",
     btnMarkPaid: "Marcar pagado",
-    review: "Revisar pedido",
+    review: "Detalles",
+    quickActions: "Acciones rapidas",
+    currentStatus: "Estado actual",
     emptyOrders: "No hay pedidos en este estado.",
     emptyReservations: "No hay reservas registradas.",
     customer: "Cliente",
+    tableNumber: "Mesa",
     orderComments: "Comentarios del pedido",
     orderPickupBadge: "Para llevar",
     orderCashierPending: "Pagará en caja",
-    orderPaidMessage: "Pago realizado",
+    orderPaidMessage: "Pago confirmado",
     orderUnpaidMessage: "No ha pagado el pedido",
     payment: "Pago",
     paymentMethod: "Metodo",
     paymentStatus: "Estado",
+    paymentMethodUpdated: "Metodo de pago actualizado",
+    paymentRegistered: "Pago registrado",
+    paymentMethodTransfer: "Transferencia",
+    paymentMethodCash: "Efectivo",
+    paymentMethodCard: "Tarjeta",
     payMethodOnline: "En linea",
     payMethodCard: "Tarjeta",
     payMethodPaypal: "PayPal",
@@ -75,6 +93,7 @@ const i18n = {
     statsSummary: "Resumen",
     statsOps: "Operacion",
     statsSales: "Ventas",
+    statsPayments: "Pagos",
     topFoodTitle: "Top comida vendida",
     topFoodEmpty: "No hay ventas aceptadas para este periodo.",
     calendarTitle: "Calendario de ventas",
@@ -95,6 +114,29 @@ const i18n = {
     updated: "Estado actualizado",
     paymentUpdated: "Pago actualizado",
     paymentReceived: "Pago recibido",
+    internalNotes: "Notas internas",
+    internalNotesPlaceholder: "Agrega una nota privada para el personal",
+    notesSaved: "Nota interna guardada",
+    notesAutosaveIdle: "Guardado automatico activado",
+    notesAutosaveSaving: "Guardando...",
+    notesAutosaveSaved: "Guardado",
+    notesAutosaveError: "No se pudo guardar",
+    reservationOccasion: "Ocasion",
+    reservationAllergies: "Alergias",
+    reservationNotes: "Notas",
+    reservationStatus_pending: "Pendiente",
+    reservationStatus_confirmed: "Confirmada",
+    reservationStatus_rescheduled: "Reagendada",
+    reservationStatus_cancelled: "Cancelada",
+    reservationStatus_attended: "Atendida",
+    reservationConfirm: "Confirmar",
+    reservationReschedule: "Reagendar",
+    reservationCancel: "Cancelar",
+    reservationAttended: "Atendida",
+    reservationDate: "Fecha",
+    reservationTime: "Hora",
+    reservationUpdated: "Reserva actualizada",
+    exportNoData: "No hay datos para exportar en esta vista",
     staffRole: "Rol",
     signOut: "Cerrar sesion",
     signOutShort: "Salir"
@@ -114,6 +156,9 @@ const i18n = {
     crmSub: "Real-time operations view for representatives.",
     viewOrders: "Orders",
     viewReservations: "Reservations",
+    searchLabel: "Search",
+    searchPlaceholder: "Search by order, customer, phone, table, or reservation",
+    exportCurrentCsv: "Export CSV",
     filterAll: "All",
     filterPending: "Pending",
     filterInProgress: "In preparation",
@@ -123,21 +168,33 @@ const i18n = {
     btnPending: "Pending",
     btnInProgress: "In preparation",
     btnReady: "Ready",
+    btnBack: "Back",
+    btnNext: "Next",
+    btnReopen: "Reopen",
+    btnReactivate: "Reactivate",
     btnAccept: "Deliver",
     btnReject: "Reject",
     btnMarkPaid: "Mark paid",
-    review: "Review order",
+    review: "Details",
+    quickActions: "Quick actions",
+    currentStatus: "Current status",
     emptyOrders: "No orders for this status.",
     emptyReservations: "No reservations found.",
     customer: "Customer",
+    tableNumber: "Table",
     orderComments: "Order comments",
     orderPickupBadge: "To go",
     orderCashierPending: "Will pay in person",
-    orderPaidMessage: "Payment made",
+    orderPaidMessage: "Payment confirmed",
     orderUnpaidMessage: "Order not paid yet",
     payment: "Payment",
     paymentMethod: "Method",
     paymentStatus: "Status",
+    paymentMethodUpdated: "Payment method updated",
+    paymentRegistered: "Payment registered",
+    paymentMethodTransfer: "Transfer",
+    paymentMethodCash: "Cash",
+    paymentMethodCard: "Card",
     payMethodOnline: "Online",
     payMethodCard: "Card",
     payMethodPaypal: "PayPal",
@@ -163,6 +220,7 @@ const i18n = {
     statsSummary: "Summary",
     statsOps: "Operations",
     statsSales: "Sales",
+    statsPayments: "Payments",
     topFoodTitle: "Top food sold",
     topFoodEmpty: "No accepted sales for this period.",
     calendarTitle: "Sales calendar",
@@ -183,6 +241,29 @@ const i18n = {
     updated: "Status updated",
     paymentUpdated: "Payment updated",
     paymentReceived: "Payment received",
+    internalNotes: "Internal notes",
+    internalNotesPlaceholder: "Add a private note for staff",
+    notesSaved: "Internal note saved",
+    notesAutosaveIdle: "Autosave is on",
+    notesAutosaveSaving: "Saving...",
+    notesAutosaveSaved: "Saved",
+    notesAutosaveError: "Could not save",
+    reservationOccasion: "Occasion",
+    reservationAllergies: "Allergies",
+    reservationNotes: "Notes",
+    reservationStatus_pending: "Pending",
+    reservationStatus_confirmed: "Confirmed",
+    reservationStatus_rescheduled: "Rescheduled",
+    reservationStatus_cancelled: "Cancelled",
+    reservationStatus_attended: "Attended",
+    reservationConfirm: "Confirm",
+    reservationReschedule: "Reschedule",
+    reservationCancel: "Cancel",
+    reservationAttended: "Attended",
+    reservationDate: "Date",
+    reservationTime: "Time",
+    reservationUpdated: "Reservation updated",
+    exportNoData: "There is no data to export in this view",
     staffRole: "Role",
     signOut: "Sign out",
     signOutShort: "Out"
@@ -208,6 +289,8 @@ const filterButtons = Array.from(document.querySelectorAll(".chip[data-filter]")
 const periodButtons = Array.from(document.querySelectorAll(".chip[data-period]"));
 const ordersView = document.getElementById("ordersView");
 const reservationsView = document.getElementById("reservationsView");
+const crmSearch = document.getElementById("crmSearch");
+const exportCurrentCsvBtn = document.getElementById("exportCurrentCsv");
 const reviewModal = document.getElementById("reviewModal");
 const reviewTitle = document.getElementById("reviewTitle");
 const reviewBody = document.getElementById("reviewBody");
@@ -227,6 +310,8 @@ let currentStaffProfile = null;
 let ordersCache = [];
 let reservationsCache = [];
 let activePeriod = "day";
+let activeView = "orders";
+let searchTerm = "";
 let calendarMonth = (() => {
   const now = new Date();
   now.setDate(1);
@@ -241,6 +326,9 @@ let knownOrderIds = new Set();
 let knownOrderPaymentStatus = new Map();
 let audioCtx = null;
 let audioUnlocked = false;
+let reviewNotesAutosaveTimer = null;
+let reviewNotesDraft = "";
+let reviewNotesStatusState = "idle";
 
 function t(key) {
   return (i18n[lang] && i18n[lang][key]) || key;
@@ -363,11 +451,98 @@ function orderStatusLabel(status) {
   return t(`status_${status}`);
 }
 
+const ORDER_STATUS_FLOW = ["pending", "in_progress", "ready", "accepted"];
+
+function getOrderFlowActions(status) {
+  if (status === "accepted") {
+    return {
+      back: null,
+      next: { status: "pending", label: t("btnReopen"), simple: true },
+      canReject: false
+    };
+  }
+
+  if (status === "rejected") {
+    return {
+      back: null,
+      next: { status: "pending", label: t("btnReactivate"), simple: true },
+      canReject: false
+    };
+  }
+
+  const stepIndex = ORDER_STATUS_FLOW.indexOf(status);
+  if (stepIndex === -1) {
+    return { back: null, next: null, canReject: false };
+  }
+
+  return {
+    back:
+      stepIndex > 0
+        ? { status: ORDER_STATUS_FLOW[stepIndex - 1], label: t("btnBack") }
+        : null,
+    next:
+      stepIndex < ORDER_STATUS_FLOW.length - 1
+        ? {
+            status: ORDER_STATUS_FLOW[stepIndex + 1],
+            label: status === "ready" ? t("btnAccept") : t("btnNext")
+          }
+        : null,
+    canReject: status !== "accepted"
+  };
+}
+
+function renderFlowButton(orderId, action, tone = "btn-outline", extraClass = "") {
+  if (!action) return "";
+  if (action.simple) {
+    return `
+      <button class="btn ${tone} btn-action status-change status-nav status-nav-simple ${extraClass}" data-id="${orderId}" data-status="${action.status}">
+        ${action.label}
+      </button>
+    `;
+  }
+
+  if (action.status === "accepted") {
+    return `
+      <button class="btn ${tone} btn-action status-change status-nav status-nav-simple status-nav-deliver ${extraClass}" data-id="${orderId}" data-status="${action.status}">
+        ${action.label}
+      </button>
+    `;
+  }
+
+  return `
+    <button class="btn ${tone} btn-action status-change status-nav ${extraClass}" data-id="${orderId}" data-status="${action.status}">
+      <span>${action.label}</span>
+      <strong>${orderStatusLabel(action.status)}</strong>
+    </button>
+  `;
+}
+
+function normalizePaymentMethod(method) {
+  const value = String(method || "").trim().toLowerCase();
+  if (["transfer", "transferencia"].includes(value)) return "transfer";
+  if (["cash", "cash_on_pickup", "efectivo"].includes(value)) return "cash";
+  if (["card", "online", "paypal", "tarjeta"].includes(value)) return "card";
+  return "cash";
+}
+
+function crmPaymentMethodOption(method) {
+  const value = String(method || "").trim().toLowerCase();
+  if (value === "transfer") return "transfer";
+  if (value === "cash" || value === "efectivo") return "cash";
+  if (value === "card" || value === "tarjeta") return "card";
+  return "";
+}
+
+function normalizeReservationStatus(status) {
+  const value = String(status || "").trim().toLowerCase();
+  return ["pending", "confirmed", "rescheduled", "cancelled", "attended"].includes(value) ? value : "pending";
+}
+
 function paymentMethodLabel(method) {
-  if (method === "paypal") return t("payMethodPaypal");
-  if (method === "card") return t("payMethodCard");
-  if (method === "online") return t("payMethodOnline");
-  return t("payMethodCashOnPickup");
+  const normalized = normalizePaymentMethod(method);
+  if (normalized === "transfer") return t("paymentMethodTransfer");
+  if (normalized === "card") return t("paymentMethodCard");
+  return t("paymentMethodCash");
 }
 
 function paymentStatusLabel(status) {
@@ -382,14 +557,76 @@ function paymentDone(order) {
 
 function crmPaymentLine(order) {
   const done = paymentDone(order);
+  const methodText = paymentMethodLabel(order?.payment?.method);
   const paymentText = done ? t("orderPaidMessage") : t("orderUnpaidMessage");
-  if (order?.customer?.pickup) {
-    return `${t("orderPickupBadge")} | ${paymentText}`;
+  const parts = [methodText, paymentText];
+  if (order?.customer?.pickup) parts.unshift(t("orderPickupBadge"));
+  return parts.filter(Boolean).join(" | ");
+}
+
+function crmCustomerMeta(order) {
+  const meta = [];
+  if (order?.customer?.phone) meta.push(order.customer.phone);
+  if (!order?.customer?.pickup && order?.customer?.tableNumber) {
+    meta.push(`${t("tableNumber")}: ${order.customer.tableNumber}`);
   }
-  if (order?.payment?.method === "cash_on_pickup" && !done) {
-    return t("orderCashierPending");
-  }
-  return paymentText;
+  if (order?.customer?.pickup) meta.push(t("orderPickupBadge"));
+  return meta.join(" | ") || "-";
+}
+
+function reservationStatusLabel(status) {
+  return t(`reservationStatus_${normalizeReservationStatus(status)}`);
+}
+
+function normalizeText(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function searchableOrderText(order) {
+  return normalizeText([
+    order.displayId,
+    order.id,
+    order.customer?.name,
+    order.customer?.phone,
+    order.customer?.tableNumber,
+    order.customer?.comments,
+    order.staffNotes,
+    paymentMethodLabel(order.payment?.method),
+    ...(order.items || []).map((item) => item.title?.[lang] || item.title?.es || item.title?.en || "")
+  ].join(" "));
+}
+
+function searchableReservationText(reservation) {
+  return normalizeText([
+    reservation.name,
+    reservation.phone,
+    reservation.email,
+    reservation.date,
+    reservation.time,
+    reservation.occasion,
+    reservation.allergies,
+    reservation.notes,
+    reservationStatusLabel(reservation.status)
+  ].join(" "));
+}
+
+function csvEscape(value) {
+  const text = String(value ?? "");
+  if (/[",\n]/.test(text)) return `"${text.replace(/"/g, '""')}"`;
+  return text;
+}
+
+function downloadCsv(filename, rows) {
+  const csv = rows.map((row) => row.map(csvEscape).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 
@@ -454,6 +691,9 @@ function applyI18n() {
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     node.textContent = t(node.dataset.i18n);
   });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+    node.setAttribute("placeholder", t(node.dataset.i18nPlaceholder));
+  });
   renderStats();
   renderFoodStats();
   renderSalesCalendar();
@@ -462,7 +702,17 @@ function applyI18n() {
 }
 
 function filteredOrders() {
-  return ordersCache.filter((o) => (activeFilter === "all" ? true : o.status === activeFilter));
+  const term = normalizeText(searchTerm);
+  return ordersCache.filter((order) => {
+    const statusMatch = activeFilter === "all" ? true : order.status === activeFilter;
+    const searchMatch = !term || searchableOrderText(order).includes(term);
+    return statusMatch && searchMatch;
+  });
+}
+
+function filteredReservations() {
+  const term = normalizeText(searchTerm);
+  return reservationsCache.filter((reservation) => !term || searchableReservationText(reservation).includes(term));
 }
 
 function renderStats() {
@@ -474,6 +724,14 @@ function renderStats() {
   const acceptedOrders = periodOrders.filter((o) => o.status === "accepted");
   const revenue = acceptedOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
   const avgTicket = acceptedOrders.length ? revenue / acceptedOrders.length : 0;
+  const paymentCounts = periodOrders.reduce(
+    (acc, order) => {
+      const key = normalizePaymentMethod(order.payment?.method);
+      acc[key] += 1;
+      return acc;
+    },
+    { transfer: 0, cash: 0, card: 0 }
+  );
   statsGrid.innerHTML = `
     <article class="stats-panel-card">
       <header class="stats-panel-head">
@@ -496,6 +754,14 @@ function renderStats() {
           <div class="stats-subgrid stats-subgrid-sales">
             <article class="stat-card tone-sales"><p>${t("revenueCount")}</p><h3>${money(revenue)}</h3></article>
             <article class="stat-card tone-sales-soft"><p>${t("avgTicket")}</p><h3>${money(avgTicket)}</h3></article>
+          </div>
+        </section>
+        <section class="stats-group">
+          <h4>${t("statsPayments")}</h4>
+          <div class="stats-subgrid stats-subgrid-sales">
+            <article class="stat-card tone-neutral"><p>${t("paymentMethodTransfer")}</p><h3>${paymentCounts.transfer}</h3></article>
+            <article class="stat-card tone-neutral"><p>${t("paymentMethodCash")}</p><h3>${paymentCounts.cash}</h3></article>
+            <article class="stat-card tone-neutral"><p>${t("paymentMethodCard")}</p><h3>${paymentCounts.card}</h3></article>
           </div>
         </section>
       </div>
@@ -699,7 +965,8 @@ function renderSalesCalendar() {
                       <article class="sales-day-row">
                         <div>
                           <strong>#${order.displayId || order.id.slice(0, 6)}</strong>
-                          <p>${t("customer")}: ${order.customer?.name || "-"} (${order.customer?.phone || "-"})</p>
+                          <p>${t("customer")}: ${order.customer?.name || "-"}</p>
+                          <p>${crmCustomerMeta(order)}</p>
                           <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
                           <p><strong>${crmPaymentLine(order)}</strong></p>
                           <p>${timeLabel(order.createdAt)} | ${money(order.total)}</p>
@@ -747,72 +1014,171 @@ function renderOrders() {
   }
 
   ordersList.innerHTML = rows
-    .map((order) => `
-      <article class="crm-card">
-        <div class="crm-top">
-          <div>
-            <strong>#${order.displayId || order.id.slice(0, 6)}</strong>
-            <p>${t("customer")}: ${order.customer?.name || ""} (${order.customer?.phone || ""})</p>
-            <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
-            <p><strong>${crmPaymentLine(order)}</strong></p>
-          </div>
-          <span class="badge ${order.status}">${orderStatusLabel(order.status)}</span>
+    .map((order) => {
+      const flow = getOrderFlowActions(order.status);
+      const isTerminalState = order.status === "accepted" || order.status === "rejected";
+      const mainActionButtons = [
+        `<button class="btn btn-outline btn-action btn-action-details review-order" data-id="${order.id}">${t("review")}</button>`,
+        renderFlowButton(order.id, flow.back, "btn-outline", "status-nav-back"),
+        renderFlowButton(
+          order.id,
+          flow.next,
+          flow.next?.status === "accepted" ? "btn-primary" : "btn-outline",
+          flow.next?.status === "accepted"
+            ? "status-nav-forward status-nav-primary status-nav-deliver"
+            : "status-nav-forward"
+        ),
+        flow.canReject
+          ? `<button class="btn danger btn-action status-change reject-action" data-id="${order.id}" data-status="rejected">${t("btnReject")}</button>`
+          : ""
+      ]
+        .filter(Boolean)
+        .join("");
+
+      const paymentMethod = crmPaymentMethodOption(order.payment?.method);
+      const paymentAction = `
+        <div class="crm-secondary-actions crm-payment-controls">
+          <label class="crm-inline-field payment-method-field">
+            <span>${t("paymentMethod")}</span>
+            <select class="payment-method-select" data-id="${order.id}" aria-label="${t("paymentMethod")}">
+              <option value="" ${paymentMethod === "" ? "selected" : ""}>${lang === "es" ? "Elegir" : "Choose"}</option>
+              <option value="transfer" ${paymentMethod === "transfer" ? "selected" : ""}>${t("paymentMethodTransfer")}</option>
+              <option value="cash" ${paymentMethod === "cash" ? "selected" : ""}>${t("paymentMethodCash")}</option>
+              <option value="card" ${paymentMethod === "card" ? "selected" : ""}>${t("paymentMethodCard")}</option>
+            </select>
+          </label>
         </div>
-        <p>${t("total")}: <strong>${money(order.total)}</strong></p>
-        <p>${t("date")}: ${formatDate(order.createdAt)}</p>
-        <div class="crm-actions">
-          <button class="btn btn-outline review-order" data-id="${order.id}">${t("review")}</button>
-          <button class="btn btn-outline status-change" data-id="${order.id}" data-status="pending">${t("btnPending")}</button>
-          <button class="btn btn-outline status-change" data-id="${order.id}" data-status="in_progress">${t("btnInProgress")}</button>
-          <button class="btn btn-outline status-change" data-id="${order.id}" data-status="ready">${t("btnReady")}</button>
-          ${
-            order.payment?.method === "online" && order.payment?.status !== "paid"
-              ? `<button class="btn btn-outline payment-change" data-id="${order.id}" data-payment-status="paid">${t("btnMarkPaid")}</button>`
-              : ""
-          }
-          <div class="final-actions">
-            <button class="btn btn-primary status-change accept-main" data-id="${order.id}" data-status="accepted">${t("btnAccept")}</button>
-            <button class="btn danger status-change reject-tiny" data-id="${order.id}" data-status="rejected">${t("btnReject")}</button>
+      `;
+
+      return `
+        <article class="crm-card">
+          <div class="crm-top">
+            <div>
+              <strong>#${order.displayId || order.id.slice(0, 6)}</strong>
+              <p>${t("customer")}: ${order.customer?.name || "-"}</p>
+              <p>${crmCustomerMeta(order)}</p>
+              <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
+              <p><strong>${crmPaymentLine(order)}</strong></p>
+              ${
+                order.staffNotes
+                  ? `<p class="crm-internal-note-preview"><strong>${t("internalNotes")}:</strong> ${order.staffNotes}</p>`
+                  : ""
+              }
+            </div>
+            <span class="badge ${order.status}">${orderStatusLabel(order.status)}</span>
           </div>
-        </div>
-      </article>
-    `)
+          <p>${t("total")}: <strong>${money(order.total)}</strong></p>
+          <p>${t("date")}: ${formatDate(order.createdAt)}</p>
+          <div class="crm-actions">
+            <section class="order-status-panel" aria-label="${t("quickActions")}">
+              <div class="order-status-actions ${isTerminalState ? "order-status-actions-terminal" : ""}">
+                ${mainActionButtons}
+              </div>
+              ${paymentAction}
+            </section>
+          </div>
+        </article>
+      `;
+    })
     .join("");
 }
 
 function renderReservations() {
-  if (!reservationsCache.length) {
+  const rows = filteredReservations();
+  if (!rows.length) {
     reservationsList.innerHTML = `<p>${t("emptyReservations")}</p>`;
     return;
   }
 
-  reservationsList.innerHTML = reservationsCache
-    .map((res) => `
+  reservationsList.innerHTML = rows
+    .map((res) => {
+      const status = normalizeReservationStatus(res.status);
+      const statusClass = status === "confirmed" ? "accepted" : status === "rescheduled" ? "ready" : status === "cancelled" ? "rejected" : status === "attended" ? "in_progress" : "pending";
+      const locked = status === "cancelled" || status === "attended";
+      return `
       <article class="crm-card">
         <div class="crm-top">
           <div>
             <strong>${res.name || "-"}</strong>
             <p>${res.phone || ""}${res.email ? ` | ${res.email}` : ""}</p>
           </div>
-          <span class="badge pending">${res.party || 1} pax</span>
+          <span class="badge ${statusClass}">${reservationStatusLabel(status)} | ${res.party || 1} pax</span>
         </div>
         <p>${t("date")}: ${res.date || "-"} ${res.time || ""}</p>
-        <p>Occasion: ${res.occasion || "-"}</p>
-        <p>Allergies: ${res.allergies || "-"}</p>
-        <p>Notes: ${res.notes || "-"}</p>
+        <div class="reservation-detail-grid">
+          <p><strong>${t("reservationOccasion")}:</strong> ${res.occasion || "-"}</p>
+          <p><strong>${t("reservationAllergies")}:</strong> ${res.allergies || "-"}</p>
+          <p><strong>${t("reservationNotes")}:</strong> ${res.notes || "-"}</p>
+        </div>
+        <div class="crm-actions">
+          <div class="crm-secondary-actions">
+            ${
+              !["confirmed", "attended", "cancelled"].includes(status)
+                ? `<button class="btn btn-outline btn-compact reservation-status-change" data-id="${res.id}" data-status="confirmed">${t("reservationConfirm")}</button>`
+                : ""
+            }
+            ${
+              !["attended", "cancelled"].includes(status)
+                ? `<button class="btn btn-outline btn-compact reservation-status-change" data-id="${res.id}" data-status="attended">${t("reservationAttended")}</button>`
+                : ""
+            }
+            ${
+              status !== "cancelled"
+                ? `<button class="btn btn-outline btn-compact reservation-status-change" data-id="${res.id}" data-status="cancelled">${t("reservationCancel")}</button>`
+                : ""
+            }
+          </div>
+          <form class="reservation-reschedule-form" data-id="${res.id}">
+            <label class="crm-inline-field">
+              <span>${t("reservationDate")}</span>
+              <input type="date" name="date" value="${res.date || ""}" ${locked ? "disabled" : ""}>
+            </label>
+            <label class="crm-inline-field">
+              <span>${t("reservationTime")}</span>
+              <input type="time" name="time" value="${res.time || ""}" ${locked ? "disabled" : ""}>
+            </label>
+            <button class="btn btn-outline btn-compact" type="submit" ${locked ? "disabled" : ""}>${t("reservationReschedule")}</button>
+          </form>
+        </div>
       </article>
-    `)
+    `;
+    })
     .join("");
 }
 
 function openReview(orderId) {
   const order = ordersCache.find((o) => o.id === orderId);
   if (!order) return;
+  const sameOrder = selectedOrderId === orderId;
+  const activeTextarea =
+    sameOrder && document.activeElement?.classList?.contains("review-staff-notes")
+      ? document.activeElement
+      : null;
+  const savedSelectionStart = activeTextarea ? activeTextarea.selectionStart : null;
+  const savedSelectionEnd = activeTextarea ? activeTextarea.selectionEnd : null;
+  const savedTextareaScrollTop = activeTextarea ? activeTextarea.scrollTop : 0;
+  const savedBodyScrollTop = sameOrder ? reviewBody.scrollTop : 0;
+
+  if (!sameOrder && reviewNotesAutosaveTimer) {
+    clearTimeout(reviewNotesAutosaveTimer);
+    reviewNotesAutosaveTimer = null;
+  }
+
+  if (!sameOrder) {
+    reviewNotesDraft = order.staffNotes || "";
+    reviewNotesStatusState = "idle";
+  } else if (!activeTextarea) {
+    reviewNotesDraft = order.staffNotes || reviewNotesDraft || "";
+  }
+
   selectedOrderId = orderId;
   reviewTitle.textContent = `#${order.displayId || order.id.slice(0, 6)}`;
   reviewBody.innerHTML = `
-    <p>${t("customer")}: <strong>${order.customer?.name || ""}</strong> (${order.customer?.phone || ""})</p>
+    <p>${t("customer")}: <strong>${order.customer?.name || "-"}</strong></p>
+    <p>${crmCustomerMeta(order)}</p>
     <p>${t("orderComments")}: ${order.customer?.comments || "-"}</p>
+    <p>${t("paymentMethod")}: <strong>${paymentMethodLabel(order.payment?.method)}</strong></p>
+    <p>${t("paymentStatus")}: <strong>${paymentStatusLabel(order.payment?.status || "unpaid")}</strong></p>
     <p><strong>${crmPaymentLine(order)}</strong></p>
     <p>${t("date")}: ${formatDate(order.createdAt)}</p>
     <p>${t("total")}: <strong>${money(order.total)}</strong></p>
@@ -822,12 +1188,34 @@ function openReview(orderId) {
         .join("")}
     </ul>
     <p><strong>${orderStatusLabel(order.status)}</strong></p>
+    <label class="modal-field">
+      <span>${t("internalNotes")}</span>
+      <textarea class="review-staff-notes" rows="4" placeholder="${t("internalNotesPlaceholder")}"></textarea>
+    </label>
+    <p class="notes-autosave-status" data-order-id="${order.id}" data-state="idle">${t("notesAutosaveIdle")}</p>
   `;
+  const nextTextarea = reviewBody.querySelector(".review-staff-notes");
+  if (nextTextarea) {
+    nextTextarea.value = activeTextarea ? reviewNotesDraft : (reviewNotesDraft || order.staffNotes || "");
+    if (activeTextarea) {
+      nextTextarea.focus();
+      nextTextarea.setSelectionRange(savedSelectionStart, savedSelectionEnd);
+      nextTextarea.scrollTop = savedTextareaScrollTop;
+      reviewBody.scrollTop = savedBodyScrollTop;
+    }
+  }
+  setReviewNotesStatus(reviewNotesStatusState);
   reviewModal.classList.remove("hidden");
 }
 
 function closeReviewModal() {
+  if (reviewNotesAutosaveTimer) {
+    clearTimeout(reviewNotesAutosaveTimer);
+    reviewNotesAutosaveTimer = null;
+  }
   selectedOrderId = null;
+  reviewNotesDraft = "";
+  reviewNotesStatusState = "idle";
   reviewModal.classList.add("hidden");
 }
 
@@ -847,6 +1235,129 @@ async function setPaymentStatus(orderId, paymentStatus) {
   } catch (_e) {
     showToast("Error");
   }
+}
+
+async function setPaymentMethod(orderId, method) {
+  const normalizedMethod = crmPaymentMethodOption(method);
+  if (!normalizedMethod) return;
+  try {
+    await updateOrderPaymentDetails(orderId, { method: normalizedMethod, status: "paid" }, currentStaffUser);
+    showToast(t("paymentRegistered"));
+  } catch (_e) {
+    showToast("Error");
+  }
+}
+
+async function saveOrderNotes(orderId, staffNotes) {
+  try {
+    await updateOrderStaffNotes(orderId, staffNotes, currentStaffUser);
+    return true;
+  } catch (_e) {
+    return false;
+  }
+}
+
+async function updateReservationRecord(reservationId, updates) {
+  try {
+    await updateReservationDetails(reservationId, updates, currentStaffUser);
+    showToast(t("reservationUpdated"));
+  } catch (_e) {
+    showToast("Error");
+  }
+}
+
+function exportCurrentView() {
+  const stamp = new Date().toISOString().slice(0, 10);
+  if (activeView === "reservations") {
+    const rows = filteredReservations();
+    if (!rows.length) {
+      showToast(t("exportNoData"));
+      return;
+    }
+    downloadCsv(`reservas-${stamp}.csv`, [
+      [
+        "ID",
+        t("customer"),
+        "Telefono",
+        "Email",
+        t("reservationDate"),
+        t("reservationTime"),
+        t("reservationOccasion"),
+        t("reservationAllergies"),
+        t("reservationNotes"),
+        "Status"
+      ],
+      ...rows.map((reservation) => [
+        reservation.id,
+        reservation.name || "",
+        reservation.phone || "",
+        reservation.email || "",
+        reservation.date || "",
+        reservation.time || "",
+        reservation.occasion || "",
+        reservation.allergies || "",
+        reservation.notes || "",
+        reservationStatusLabel(reservation.status)
+      ])
+    ]);
+    return;
+  }
+
+  const rows = filteredOrders();
+  if (!rows.length) {
+    showToast(t("exportNoData"));
+    return;
+  }
+  downloadCsv(`pedidos-${stamp}.csv`, [
+    [
+      "ID",
+      "Display ID",
+      t("customer"),
+      "Telefono",
+      t("tableNumber"),
+      "Pickup",
+      t("paymentMethod"),
+      t("paymentStatus"),
+      t("total"),
+      "Status",
+      t("internalNotes"),
+      t("date")
+    ],
+    ...rows.map((order) => [
+      order.id,
+      order.displayId || "",
+      order.customer?.name || "",
+      order.customer?.phone || "",
+      order.customer?.tableNumber || "",
+      order.customer?.pickup ? t("orderPickupBadge") : "",
+      paymentMethodLabel(order.payment?.method),
+      paymentStatusLabel(order.payment?.status || "unpaid"),
+      Number(order.total || 0),
+      orderStatusLabel(order.status),
+      order.staffNotes || "",
+      formatDate(order.createdAt)
+    ])
+  ]);
+}
+
+function setReviewNotesStatus(state) {
+  reviewNotesStatusState = state;
+  const statusNode = reviewBody.querySelector(".notes-autosave-status");
+  if (!statusNode) return;
+  statusNode.dataset.state = state;
+  if (state === "saving") {
+    statusNode.textContent = t("notesAutosaveSaving");
+    return;
+  }
+  if (state === "saved") {
+    statusNode.textContent = t("notesAutosaveSaved");
+    return;
+  }
+  if (state === "error") {
+    statusNode.textContent = t("notesAutosaveError");
+    return;
+  }
+  statusNode.textContent = t("notesAutosaveIdle");
 }
 
 function stopRealtime() {
@@ -934,6 +1445,39 @@ ordersList.addEventListener("click", (event) => {
   if (paymentButton) setPaymentStatus(paymentButton.dataset.id, paymentButton.dataset.paymentStatus);
 });
 
+ordersList.addEventListener("change", (event) => {
+  const paymentMethodSelect = event.target.closest(".payment-method-select");
+  if (paymentMethodSelect) setPaymentMethod(paymentMethodSelect.dataset.id, paymentMethodSelect.value);
+});
+
+reservationsList.addEventListener("click", (event) => {
+  const statusButton = event.target.closest(".reservation-status-change");
+  if (statusButton) updateReservationRecord(statusButton.dataset.id, { status: statusButton.dataset.status });
+});
+
+reservationsList.addEventListener("submit", (event) => {
+  const form = event.target.closest(".reservation-reschedule-form");
+  if (!form) return;
+  event.preventDefault();
+  const date = form.elements.date.value;
+  const time = form.elements.time.value;
+  updateReservationRecord(form.dataset.id, { status: "rescheduled", date, time });
+});
+
+reviewBody.addEventListener("input", (event) => {
+  const noteInput = event.target.closest(".review-staff-notes");
+  if (!noteInput || !selectedOrderId) return;
+  reviewNotesDraft = noteInput.value;
+  setReviewNotesStatus("saving");
+  if (reviewNotesAutosaveTimer) clearTimeout(reviewNotesAutosaveTimer);
+  const orderId = selectedOrderId;
+  reviewNotesAutosaveTimer = setTimeout(async () => {
+    reviewNotesAutosaveTimer = null;
+    const saved = await saveOrderNotes(orderId, reviewNotesDraft);
+    setReviewNotesStatus(saved ? "saved" : "error");
+  }, 650);
+});
+
 if (salesCalendar) {
   salesCalendar.addEventListener("click", (event) => {
     const shiftBtn = event.target.closest("[data-calendar-shift]");
@@ -974,6 +1518,7 @@ viewButtons.forEach((button) => {
     viewButtons.forEach((b) => b.classList.remove("active"));
     button.classList.add("active");
     const view = button.dataset.view;
+    activeView = view;
     if (view === "orders") {
       ordersView.classList.remove("hidden");
       reservationsView.classList.add("hidden");
@@ -983,6 +1528,14 @@ viewButtons.forEach((button) => {
     }
   });
 });
+
+crmSearch?.addEventListener("input", (event) => {
+  searchTerm = event.target.value || "";
+  renderOrders();
+  renderReservations();
+});
+
+exportCurrentCsvBtn?.addEventListener("click", exportCurrentView);
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {

@@ -12,12 +12,20 @@ const i18n = {
     navOrder: "Pedido",
     navReservations: "Reservas",
     navAbout: "Nosotros",
-    heroEyebrow: "Experiencia gastronomica premium",
-    heroTitle: "Pide facil, reserva rapido y disfruta comida memorable",
-    heroSub: "Sitio bilingue optimizado para movil y computador. Todo en un flujo de pedido claro y rapido.",
+    heroEyebrow: "Restaurante y experiencias memorables",
+    heroTitle: "Casa Brava",
+    heroSub: "Explora el menu, envia pedidos y reserva tu mesa desde cualquier dispositivo con una presentacion elegante y clara.",
     heroCtaMenu: "Ver menu",
     heroCtaReservation: "Reservar mesa",
+    heroCardKicker: "Atencion y horarios",
     heroCardTitle: "Horario",
+    heroCardIntro: "Todo listo para pedidos, reservas y una experiencia comoda en sala durante toda la semana.",
+    heroStatMenuTitle: "Menu digital",
+    heroStatMenuText: "Categorias claras y recorrido intuitivo desde cualquier pantalla.",
+    heroStatOrderTitle: "Pedidos rapidos",
+    heroStatOrderText: "Carrito directo a cocina con un flujo simple y profesional.",
+    heroStatReserveTitle: "Reservas faciles",
+    heroStatReserveText: "Solicita tu mesa en segundos desde celular, tablet o computadora.",
     daysWeek: "Lunes a Viernes",
     daysWeekend: "Sabado y Domingo",
     badgeFast: "Servicio rapido",
@@ -66,16 +74,21 @@ const i18n = {
     cartTitle: "Carrito",
     cartTotal: "Total",
     orderCustomerName: "Nombre para el pedido",
-    orderCustomerPhone: "Telefono de contacto",
+    orderTableNumber: "Numero de mesa",
+    orderTableNumberPlaceholder: "Ej. 12",
     orderCustomerComments: "Comentarios del pedido",
     orderCustomerCommentsPlaceholder: "Alergias, sin picante, para llevar, etc.",
     orderPickupLabel: "Para llevar",
+    orderFlowHint: "Si comes en el restaurante, el numero de mesa es obligatorio. Si eliges para llevar, te pediremos el telefono y el metodo de pago en el siguiente paso.",
     btnSendKitchen: "Enviar a cocina",
     btnPayNow: "Pagar ahora",
     btnPayCashier: "Pagar en caja",
+    btnBack: "Atras",
     btnPay: "Pagar",
-    paymentChoiceTitle: "Metodo de pago",
-    paymentChoiceText: "Elige como deseas pagar este pedido para continuar.",
+    paymentChoiceTitle: "Pedido para llevar",
+    paymentChoiceText: "Confirma tu telefono y elige como deseas pagar este pedido para continuar.",
+    paymentChoicePhoneLabel: "Telefono de contacto",
+    paymentChoicePhonePlaceholder: "Tu numero para recoger el pedido",
     paypalTitle: "Pagar con tarjeta",
     paypalInstructions: "Agrega la informacion de tu tarjeta y luego toca Pagar ahora.",
     cardNameLabel: "Nombre en la tarjeta",
@@ -90,11 +103,14 @@ const i18n = {
     addedToCart: "agregado al carrito",
     orderSent: "Pedido enviado a cocina",
     reservationSent: "Reserva enviada",
-    needCustomer: "Completa nombre y telefono del pedido.",
+    needOrderName: "Completa el nombre del pedido.",
+    needTableNumber: "Ingresa el numero de mesa para enviar el pedido a cocina.",
+    needPickupPhone: "Ingresa un telefono para el pedido para llevar.",
     trackerEmpty: "No hay pedidos recientes.",
     trackerLabel: "Ultimo pedido",
     trackerPayAtCashier: "Pagar en caja",
     trackerPaymentProcessed: "Pago procesado con éxito",
+    trackerTableLabel: "Mesa",
     status_pending: "Pendiente",
     status_in_progress: "En preparacion",
     status_ready: "Listo",
@@ -118,12 +134,20 @@ const i18n = {
     navOrder: "Order",
     navReservations: "Reservations",
     navAbout: "About",
-    heroEyebrow: "Premium dining experience",
-    heroTitle: "Order easily, reserve quickly, and enjoy memorable food",
-    heroSub: "Bilingual website optimized for mobile and desktop with a fast order flow.",
+    heroEyebrow: "Restaurant and memorable experiences",
+    heroTitle: "Casa Brava",
+    heroSub: "Explore the menu, send orders, and reserve your table from any device with an elegant, clear presentation.",
     heroCtaMenu: "View menu",
     heroCtaReservation: "Reserve table",
+    heroCardKicker: "Service and hours",
     heroCardTitle: "Hours",
+    heroCardIntro: "Ready for orders, reservations, and a comfortable dine-in experience throughout the week.",
+    heroStatMenuTitle: "Digital menu",
+    heroStatMenuText: "Clear categories and an intuitive journey on every screen.",
+    heroStatOrderTitle: "Fast ordering",
+    heroStatOrderText: "Cart-to-kitchen flow designed to feel simple and polished.",
+    heroStatReserveTitle: "Easy reservations",
+    heroStatReserveText: "Request your table in seconds from phone, tablet, or desktop.",
     daysWeek: "Monday to Friday",
     daysWeekend: "Saturday and Sunday",
     badgeFast: "Fast service",
@@ -172,16 +196,21 @@ const i18n = {
     cartTitle: "Cart",
     cartTotal: "Total",
     orderCustomerName: "Order name",
-    orderCustomerPhone: "Contact phone",
+    orderTableNumber: "Table number",
+    orderTableNumberPlaceholder: "Ex. 12",
     orderCustomerComments: "Order comments",
     orderCustomerCommentsPlaceholder: "Allergies, no spice, takeaway, etc.",
     orderPickupLabel: "To go",
+    orderFlowHint: "If you are dining in, the table number is required. If you choose to go, we will ask for your phone number and payment method in the next step.",
     btnSendKitchen: "Send to kitchen",
     btnPayNow: "Pay now",
     btnPayCashier: "Pay at cashier",
+    btnBack: "Back",
     btnPay: "Pay",
-    paymentChoiceTitle: "Payment method",
-    paymentChoiceText: "Choose how you want to pay this order to continue.",
+    paymentChoiceTitle: "To-go order",
+    paymentChoiceText: "Confirm your phone number and choose how you want to pay this order to continue.",
+    paymentChoicePhoneLabel: "Contact phone",
+    paymentChoicePhonePlaceholder: "Your number for pickup",
     paypalTitle: "Pay with card",
     paypalInstructions: "Add your card information and then tap Pay now.",
     cardNameLabel: "Name on card",
@@ -196,11 +225,14 @@ const i18n = {
     addedToCart: "added to cart",
     orderSent: "Order sent to kitchen",
     reservationSent: "Reservation sent",
-    needCustomer: "Please complete order name and phone.",
+    needOrderName: "Please complete the order name.",
+    needTableNumber: "Enter the table number before sending the order to the kitchen.",
+    needPickupPhone: "Enter a phone number for the to-go order.",
     trackerEmpty: "No recent orders.",
     trackerLabel: "Last order",
     trackerPayAtCashier: "Pay at cashier",
     trackerPaymentProcessed: "Payment was successfully processed",
+    trackerTableLabel: "Table",
     status_pending: "Pending",
     status_in_progress: "In preparation",
     status_ready: "Ready",
@@ -284,12 +316,19 @@ const cartCount = document.getElementById("cartCount");
 const cartTotal = document.getElementById("cartTotal");
 const clearCart = document.getElementById("clearCart");
 const sendToKitchenBtn = document.getElementById("sendToKitchen");
+const orderCustomerNameInput = document.getElementById("orderCustomerName");
+const orderTableNumberInput = document.getElementById("orderTableNumber");
+const orderPickupInput = document.getElementById("orderPickup");
+const orderCustomerCommentsInput = document.getElementById("orderCustomerComments");
 const paymentChoiceModal = document.getElementById("paymentChoiceModal");
 const closePaymentChoiceBtn = document.getElementById("closePaymentChoice");
 const choosePayNowBtn = document.getElementById("choosePayNow");
 const choosePayCashBtn = document.getElementById("choosePayCash");
+const pickupContactPhoneInput = document.getElementById("pickupContactPhone");
+const pickupPhoneError = document.getElementById("pickupPhoneError");
 const paypalPaymentModal = document.getElementById("paypalPaymentModal");
 const closePaypalPaymentBtn = document.getElementById("closePaypalPayment");
+const backToPaymentChoiceBtn = document.getElementById("backToPaymentChoice");
 const cardFallbackForm = document.getElementById("cardFallbackForm");
 const cardNameInput = document.getElementById("cardName");
 const cardNumberInput = document.getElementById("cardNumber");
@@ -541,10 +580,13 @@ function closeDrawer() {
 
 function openPaymentChoiceModal() {
   paymentChoiceModal?.classList.remove("hidden");
+  clearPickupPhoneError();
+  pickupContactPhoneInput?.focus();
 }
 
 function closePaymentChoiceModal() {
   paymentChoiceModal?.classList.add("hidden");
+  clearPickupPhoneError();
 }
 
 function openPaypalPaymentModal() {
@@ -555,6 +597,39 @@ function closePaypalPaymentModal() {
   paypalPaymentModal?.classList.add("hidden");
   if (paypalButtonsContainer) paypalButtonsContainer.innerHTML = "";
   if (cardFallbackForm) cardFallbackForm.reset();
+}
+
+function isPickupSelected() {
+  return Boolean(orderPickupInput?.checked);
+}
+
+function syncPickupState() {
+  if (!orderTableNumberInput) return;
+  const pickup = isPickupSelected();
+  orderTableNumberInput.disabled = pickup;
+  orderTableNumberInput.setAttribute("aria-disabled", pickup ? "true" : "false");
+  if (pickup) orderTableNumberInput.value = "";
+}
+
+function resetOrderForm() {
+  if (orderCustomerNameInput) orderCustomerNameInput.value = "";
+  if (orderTableNumberInput) orderTableNumberInput.value = "";
+  if (orderCustomerCommentsInput) orderCustomerCommentsInput.value = "";
+  if (orderPickupInput) orderPickupInput.checked = false;
+  if (pickupContactPhoneInput) pickupContactPhoneInput.value = "";
+  syncPickupState();
+}
+
+function setPickupPhoneError(message) {
+  if (!pickupPhoneError) return;
+  pickupPhoneError.textContent = message;
+  pickupPhoneError.classList.remove("hidden");
+}
+
+function clearPickupPhoneError() {
+  if (!pickupPhoneError) return;
+  pickupPhoneError.textContent = "";
+  pickupPhoneError.classList.add("hidden");
 }
 
 function animateAddToCart(sourceEl, message) {
@@ -727,13 +802,20 @@ function renderTracker() {
       const createdAt = asDate(order.createdAt) || new Date();
       const isPaid = order.payment?.status === "paid";
       const isToGo = Boolean(order.customer?.pickup);
+      const tableNumber = String(order.customer?.tableNumber || "").trim();
+      const detailLine = [
+        order.customer?.name || "",
+        !isToGo && tableNumber ? `${t("trackerTableLabel")} ${tableNumber}` : ""
+      ]
+        .filter(Boolean)
+        .join(" | ");
       const customerPaymentLine = isPaid
         ? (isToGo ? `${t("orderPickupLabel")} | ${t("trackerPaymentProcessed")}` : t("trackerPaymentProcessed"))
         : (isToGo ? `${t("orderPickupLabel")} | ${t("trackerPayAtCashier")}` : t("trackerPayAtCashier"));
       return `
         <div class="tracker-row">
           <strong>${t("trackerLabel")}: #${order.displayId || order.id.slice(0, 6)}</strong>
-          <p>${order.customer?.name || ""} | ${createdAt.toLocaleString(lang === "es" ? "es-ES" : "en-US")}</p>
+          <p>${detailLine || (order.customer?.name || "-")} | ${createdAt.toLocaleString(lang === "es" ? "es-ES" : "en-US")}</p>
           <p><strong>${customerPaymentLine}</strong></p>
           <p><strong>${statusLabel(order.status)}</strong></p>
         </div>
@@ -829,16 +911,34 @@ function validateCardForm() {
   return { cardLast4: cardNumber.slice(-4) };
 }
 
-function validateCustomerForOrder() {
-  const customerName = (document.getElementById("orderCustomerName").value || "").trim();
-  const customerPhone = (document.getElementById("orderCustomerPhone").value || "").trim();
-  const customerComments = (document.getElementById("orderCustomerComments")?.value || "").trim();
-  const customerPickup = Boolean(document.getElementById("orderPickup")?.checked);
-  if (!customerName || !customerPhone) {
-    showToast(t("needCustomer"));
+function validateCustomerForOrder(options = {}) {
+  const { requirePickupPhone = true, pickupPhoneErrorMode = "toast" } = options;
+  const customerName = (orderCustomerNameInput?.value || "").trim();
+  const customerComments = (orderCustomerCommentsInput?.value || "").trim();
+  const customerPickup = isPickupSelected();
+  const customerTableNumber = customerPickup ? "" : String(orderTableNumberInput?.value || "").trim();
+  const customerPhone = customerPickup ? String(pickupContactPhoneInput?.value || "").trim() : "";
+
+  if (customerPickup) clearPickupPhoneError();
+
+  if (!customerName) {
+    showToast(t("needOrderName"));
     return null;
   }
-  return { customerName, customerPhone, customerComments, customerPickup };
+  if (customerPickup && requirePickupPhone && !customerPhone) {
+    if (pickupPhoneErrorMode === "inline") {
+      setPickupPhoneError(t("needPickupPhone"));
+      pickupContactPhoneInput?.focus();
+    } else {
+      showToast(t("needPickupPhone"));
+    }
+    return null;
+  }
+  if (!customerPickup && !customerTableNumber) {
+    showToast(t("needTableNumber"));
+    return null;
+  }
+  return { customerName, customerPhone, customerComments, customerPickup, customerTableNumber };
 }
 
 function loadPayPalSdk() {
@@ -932,7 +1032,8 @@ async function submitOrderWithMode(mode, paymentMeta = {}, options = {}) {
       name: customer.customerName,
       phone: customer.customerPhone,
       comments: customer.customerComments,
-      pickup: customer.customerPickup
+      pickup: customer.customerPickup,
+      tableNumber: customer.customerTableNumber
     },
     items: cart,
     total: cart.reduce((sum, row) => sum + row.qty * row.price, 0),
@@ -945,10 +1046,7 @@ async function submitOrderWithMode(mode, paymentMeta = {}, options = {}) {
     cart = [];
     write(STORAGE.cart, cart);
     renderCart();
-    const commentsField = document.getElementById("orderCustomerComments");
-    if (commentsField) commentsField.value = "";
-    const pickupField = document.getElementById("orderPickup");
-    if (pickupField) pickupField.checked = false;
+    resetOrderForm();
     closePaypalPaymentModal();
     closePaymentChoiceModal();
     closeDrawer();
@@ -1048,23 +1146,35 @@ clearCart.addEventListener("click", () => {
 });
 sendToKitchenBtn.addEventListener("click", () => {
   if (!cart.length) return;
-  const customer = validateCustomerForOrder();
+  const customer = validateCustomerForOrder({ requirePickupPhone: false });
   if (!customer) return;
-  openPaymentChoiceModal();
+  if (customer.customerPickup) {
+    openPaymentChoiceModal();
+    return;
+  }
+  submitOrderWithMode("cash_on_pickup", {}, { showConfirmation: true });
 });
 closePaymentChoiceBtn?.addEventListener("click", closePaymentChoiceModal);
 choosePayCashBtn?.addEventListener("click", async () => {
+  const customer = validateCustomerForOrder({ pickupPhoneErrorMode: "inline" });
+  if (!customer) return;
   closePaymentChoiceModal();
   const sent = await submitOrderWithMode("cash_on_pickup", {}, { showConfirmation: false });
   if (sent) showCenterNotice(t("paymentCashSent"), 4200);
 });
 choosePayNowBtn?.addEventListener("click", () => {
+  const customer = validateCustomerForOrder({ pickupPhoneErrorMode: "inline" });
+  if (!customer) return;
   closePaymentChoiceModal();
   showToast(t("paypalInstructions"), { duration: 2600 });
   openPaypalPaymentModal();
   renderPayPalButtons();
 });
 closePaypalPaymentBtn?.addEventListener("click", closePaypalPaymentModal);
+backToPaymentChoiceBtn?.addEventListener("click", () => {
+  closePaypalPaymentModal();
+  openPaymentChoiceModal();
+});
 if (cardFallbackForm) {
   cardFallbackForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -1081,6 +1191,8 @@ if (cardFallbackForm) {
     if (paid) showCenterNotice(t("paymentCardSent"));
   });
 }
+orderPickupInput?.addEventListener("change", syncPickupState);
+pickupContactPhoneInput?.addEventListener("input", clearPickupPhoneError);
 reservationForm.addEventListener("submit", submitReservation);
 
 recentOrderIds = readRecentOrderIds();
@@ -1093,4 +1205,5 @@ if (!recentOrderIds.length) {
 }
 syncTrackerSubscriptions();
 applyI18n();
+syncPickupState();
 startHondurasLiveInfo();

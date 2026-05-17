@@ -32,6 +32,11 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+function normalizeReservationStatus(status) {
+  const value = String(status || "").trim().toLowerCase();
+  return ["pending", "confirmed", "rescheduled", "cancelled", "attended"].includes(value) ? value : "pending";
+}
+
 function normalizeOrderInput(order) {
   const paymentMethod = (order.payment && order.payment.method) || "cash_on_pickup";
   const paymentStatus = (order.payment && order.payment.status) || (paymentMethod === "online" ? "pending" : "unpaid");
@@ -42,7 +47,8 @@ function normalizeOrderInput(order) {
       name: (order.customer && order.customer.name) || "",
       phone: (order.customer && order.customer.phone) || "",
       comments: (order.customer && order.customer.comments) || "",
-      pickup: Boolean(order.customer && order.customer.pickup)
+      pickup: Boolean(order.customer && order.customer.pickup),
+      tableNumber: (order.customer && order.customer.tableNumber) || ""
     },
     items: Array.isArray(order.items) ? order.items : [],
     total: Number(order.total || 0),
@@ -77,6 +83,7 @@ async function addOrder(order) {
     delete legacyPayload.payment;
     if (legacyPayload.customer && typeof legacyPayload.customer === "object") {
       delete legacyPayload.customer.pickup;
+      delete legacyPayload.customer.tableNumber;
     }
     const ref = await addDoc(collection(db, "orders"), legacyPayload);
     return ref.id;
@@ -94,8 +101,10 @@ async function addReservation(reservation) {
     occasion: reservation.occasion || "",
     allergies: reservation.allergies || "",
     notes: reservation.notes || "",
+    status: normalizeReservationStatus(reservation.status),
     language: reservation.language || "es",
-    createdAt: serverTimestamp()
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
   };
   const ref = await addDoc(collection(db, "reservations"), payload);
   return ref.id;
@@ -170,6 +179,61 @@ async function updateOrderPaymentStatus(id, paymentStatus, staffUser) {
   });
 }
 
+async function updateOrderPaymentDetails(id, payment, staffUser) {
+  const ref = doc(db, "orders", id);
+  const updates = {
+    updatedAt: serverTimestamp(),
+    paymentUpdatedBy: {
+      uid: staffUser && staffUser.uid ? staffUser.uid : "",
+      email: staffUser && staffUser.email ? staffUser.email : ""
+    }
+  };
+
+  if (payment && Object.prototype.hasOwnProperty.call(payment, "method")) {
+    updates["payment.method"] = String(payment.method || "");
+  }
+  if (payment && Object.prototype.hasOwnProperty.call(payment, "status")) {
+    updates["payment.status"] = String(payment.status || "");
+  }
+
+  await updateDoc(ref, updates);
+}
+
+async function updateOrderStaffNotes(id, staffNotes, staffUser) {
+  const ref = doc(db, "orders", id);
+  await updateDoc(ref, {
+    staffNotes: String(staffNotes || ""),
+    updatedAt: serverTimestamp(),
+    notesUpdatedBy: {
+      uid: staffUser && staffUser.uid ? staffUser.uid : "",
+      email: staffUser && staffUser.email ? staffUser.email : ""
+    }
+  });
+}
+
+async function updateReservationDetails(id, reservation, staffUser) {
+  const ref = doc(db, "reservations", id);
+  const updates = {
+    updatedAt: serverTimestamp(),
+    updatedBy: {
+      uid: staffUser && staffUser.uid ? staffUser.uid : "",
+      email: staffUser && staffUser.email ? staffUser.email : ""
+    }
+  };
+
+  if (reservation && Object.prototype.hasOwnProperty.call(reservation, "status")) {
+    updates.status = normalizeReservationStatus(reservation.status);
+  }
+  if (reservation && Object.prototype.hasOwnProperty.call(reservation, "date")) {
+    updates.date = String(reservation.date || "");
+  }
+  if (reservation && Object.prototype.hasOwnProperty.call(reservation, "time")) {
+    updates.time = String(reservation.time || "");
+  }
+
+  await updateDoc(ref, updates);
+}
+
 async function getStaffProfile(uid) {
   if (!uid) return null;
   const ref = doc(db, "staff", uid);
@@ -229,6 +293,9 @@ export {
   listenOrderById,
   updateOrderStatus,
   updateOrderPaymentStatus,
+  updateOrderPaymentDetails,
+  updateOrderStaffNotes,
+  updateReservationDetails,
   getStaffProfile,
   isStaffAuthorized,
   signInWithEmailPassword,

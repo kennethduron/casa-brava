@@ -34,7 +34,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=20260226">
+    <link rel="stylesheet" href="css/style.css?v=20260404">
     <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -77,39 +77,68 @@
 
     <main id="inicio">
         <section class="hero">
-            <div class="container hero-grid">
-                <div>
-                    <p class="eyebrow" data-i18n="heroEyebrow">Experiencia gastronomica premium</p>
-                    <h1 data-i18n="heroTitle">Pide facil, reserva rapido y disfruta comida memorable</h1>
-                    <p class="hero-sub" data-i18n="heroSub">Sitio bilingue optimizado para movil y computador. Todo en
-                        un flujo de pedido claro y rapido.</p>
-                    <div class="hero-actions">
-                        <a href="#menu" class="btn btn-primary" data-i18n="heroCtaMenu">Ver menu</a>
-                        <a href="#reservas" class="btn btn-outline" data-i18n="heroCtaReservation">Reservar mesa</a>
-                    </div>
+            <div class="hero-shell">
+                <div class="hero-media" aria-hidden="true">
+                    <img class="hero-cover" src="assets/casa-brava.jpg" alt="">
                 </div>
-                <div class="hero-card">
-                    <img class="hero-cover" src="assets/casa-brava.jpg" alt="Plato destacado del restaurante">
-                    <h2 data-i18n="heroCardTitle">Horario</h2>
-                    <ul>
-                        <li><span data-i18n="daysWeek">Lunes a Viernes</span><strong>09:00 - 21:00</strong></li>
-                        <li><span data-i18n="daysWeekend">Sabado y Domingo</span><strong>10:00 - 00:00</strong></li>
-                    </ul>
-                    <div class="hero-badges">
-                        <span data-i18n="badgeFast">Servicio rapido</span>
-                        <span data-i18n="badgeFresh">Producto fresco</span>
-                        <span data-i18n="badgeFamily">Ambiente familiar</span>
+                <div class="container hero-grid">
+                    <div class="hero-copy">
+                        <p class="eyebrow" data-i18n="heroEyebrow">Restaurante y experiencias memorables</p>
+                        <h1 data-i18n="heroTitle">Casa Brava</h1>
+                        <p class="hero-sub" data-i18n="heroSub">Explora el menu, envia pedidos y reserva tu mesa
+                            desde cualquier dispositivo con una presentacion elegante y clara.</p>
+                        <div class="hero-actions">
+                            <a href="#menu" class="btn btn-primary" data-i18n="heroCtaMenu">Ver menu</a>
+                            <a href="#reservas" class="btn btn-outline" data-i18n="heroCtaReservation">Reservar
+                                mesa</a>
+                        </div>
+                        <div class="hero-metrics">
+                            <article class="hero-metric">
+                                <strong data-i18n="heroStatMenuTitle">Menu digital</strong>
+                                <span data-i18n="heroStatMenuText">Categorias claras y recorrido intuitivo desde
+                                    cualquier pantalla.</span>
+                            </article>
+                            <article class="hero-metric">
+                                <strong data-i18n="heroStatOrderTitle">Pedidos rapidos</strong>
+                                <span data-i18n="heroStatOrderText">Carrito directo a cocina con un flujo simple y
+                                    profesional.</span>
+                            </article>
+                            <article class="hero-metric">
+                                <strong data-i18n="heroStatReserveTitle">Reservas faciles</strong>
+                                <span data-i18n="heroStatReserveText">Solicita tu mesa en segundos desde celular,
+                                    tablet o computadora.</span>
+                            </article>
+                        </div>
                     </div>
-                    <div class="hero-live-info" aria-label="Honduras live info">
-                        <p class="hero-live-item">
-                            <strong data-i18n="hnTimeLabel">Hora en Honduras</strong>
-                            <span id="hnTimeValue">--:--:--</span>
-                        </p>
-                        <p class="hero-live-item">
-                            <strong data-i18n="hnWeatherLabel">Clima en El Progreso</strong>
-                            <span id="hnWeatherValue">Cargando clima...</span>
-                        </p>
-                    </div>
+                    <aside class="hero-card">
+                        <div class="hero-card-body">
+                            <p class="hero-card-kicker" data-i18n="heroCardKicker">Atencion y horarios</p>
+                            <h2 data-i18n="heroCardTitle">Horario</h2>
+                            <p class="hero-card-intro" data-i18n="heroCardIntro">Todo listo para pedidos, reservas y
+                                una experiencia comoda en sala durante toda la semana.</p>
+                            <ul>
+                                <li><span data-i18n="daysWeek">Lunes a Viernes</span><strong>09:00 -
+                                        21:00</strong></li>
+                                <li><span data-i18n="daysWeekend">Sabado y Domingo</span><strong>10:00 -
+                                        00:00</strong></li>
+                            </ul>
+                            <div class="hero-live-info" aria-label="Honduras live info">
+                                <p class="hero-live-item">
+                                    <strong data-i18n="hnTimeLabel">Hora en Honduras</strong>
+                                    <span id="hnTimeValue">--:--:--</span>
+                                </p>
+                                <p class="hero-live-item">
+                                    <strong data-i18n="hnWeatherLabel">Clima en El Progreso</strong>
+                                    <span id="hnWeatherValue">Cargando clima...</span>
+                                </p>
+                            </div>
+                            <div class="hero-badges">
+                                <span data-i18n="badgeFast">Servicio rapido</span>
+                                <span data-i18n="badgeFresh">Producto fresco</span>
+                                <span data-i18n="badgeFamily">Ambiente familiar</span>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </section>
@@ -240,10 +269,11 @@
                 <span data-i18n="orderCustomerName">Nombre para el pedido</span>
                 <input id="orderCustomerName" type="text">
             </label>
-            <div class="cart-phone-pickup-row">
-                <label class="cart-phone-field">
-                    <span data-i18n="orderCustomerPhone">Telefono de contacto</span>
-                    <input id="orderCustomerPhone" type="tel">
+            <div class="cart-table-pickup-row">
+                <label class="cart-table-field">
+                    <span data-i18n="orderTableNumber">Numero de mesa</span>
+                    <input id="orderTableNumber" type="text" inputmode="numeric" data-i18n-placeholder="orderTableNumberPlaceholder"
+                        placeholder="Ej. 12">
                 </label>
                 <label class="cart-pickup-inline">
                     <input id="orderPickup" type="checkbox">
@@ -268,10 +298,16 @@
     <div id="paymentChoiceModal" class="modal hidden" role="dialog" aria-modal="true">
         <div class="modal-card">
             <header>
-                <h3 data-i18n="paymentChoiceTitle">Metodo de pago</h3>
+                <h3 data-i18n="paymentChoiceTitle">Pedido para llevar</h3>
                 <button id="closePaymentChoice" class="btn btn-ghost" aria-label="Cerrar / Close">X</button>
             </header>
-            <p data-i18n="paymentChoiceText">Elige como deseas pagar este pedido para continuar.</p>
+            <p class="modal-intro" data-i18n="paymentChoiceText">Confirma tu telefono y elige como deseas pagar este pedido para continuar.</p>
+            <label class="modal-field">
+                <span data-i18n="paymentChoicePhoneLabel">Telefono de contacto</span>
+                <input id="pickupContactPhone" type="tel" data-i18n-placeholder="paymentChoicePhonePlaceholder"
+                    placeholder="Tu numero para recoger el pedido">
+            </label>
+            <p id="pickupPhoneError" class="modal-error hidden" aria-live="polite"></p>
             <div class="cart-actions">
                 <button id="choosePayNow" class="btn btn-primary" data-i18n="btnPayNow">Pagar ahora</button>
                 <button id="choosePayCash" class="btn btn-outline" data-i18n="btnPayCashier">Pagar en caja</button>
@@ -307,6 +343,7 @@
                 <div class="full cart-actions">
                     <button id="confirmCardFallbackPayment" type="submit" class="btn btn-primary"
                         data-i18n="btnPayNow">Pagar ahora</button>
+                    <button id="backToPaymentChoice" type="button" class="btn btn-outline" data-i18n="btnBack">Atras</button>
                 </div>
             </form>
             <div id="paypalButtonsContainer"></div>
@@ -344,7 +381,7 @@
         </div>
     </footer>
 
-    <script type="module" src="js/app.js?v=20260303"></script>
+    <script type="module" src="js/app.js?v=20260404"></script>
 </body>
 
 </html>

@@ -18,11 +18,12 @@ service cloud.firestore {
           'displayId', 'language', 'customer', 'items', 'total', 'payment', 'status', 'createdAt', 'updatedAt', 'updatedBy'
         ])
         && request.resource.data.customer is map
-        && request.resource.data.customer.keys().hasOnly(['name', 'phone', 'comments', 'pickup'])
+        && request.resource.data.customer.keys().hasOnly(['name', 'phone', 'comments', 'pickup', 'tableNumber'])
         && request.resource.data.customer.name is string
         && request.resource.data.customer.phone is string
         && (!('comments' in request.resource.data.customer) || request.resource.data.customer.comments is string)
         && (!('pickup' in request.resource.data.customer) || request.resource.data.customer.pickup is bool)
+        && (!('tableNumber' in request.resource.data.customer) || request.resource.data.customer.tableNumber is string)
         && request.resource.data.items is list
         && request.resource.data.total is number
         && (!('payment' in request.resource.data)
@@ -42,11 +43,12 @@ service cloud.firestore {
 
     function validReservationCreate() {
       return request.resource.data.keys().hasOnly([
-          'name', 'phone', 'email', 'date', 'time', 'party', 'occasion', 'allergies', 'notes', 'language', 'createdAt'
+          'name', 'phone', 'email', 'date', 'time', 'party', 'occasion', 'allergies', 'notes', 'status', 'language', 'createdAt', 'updatedAt'
         ])
         && request.resource.data.name is string
         && request.resource.data.phone is string
-        && request.resource.data.party is number;
+        && request.resource.data.party is number
+        && (!('status' in request.resource.data) || request.resource.data.status is string);
     }
 
     match /orders/{orderId} {

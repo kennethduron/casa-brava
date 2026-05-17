@@ -13,7 +13,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=20260226">
+    <link rel="stylesheet" href="css/style.css?v=20260405">
     <link rel="icon" type="image/jpeg" href="assets/icon.jpg">
     <link rel="shortcut icon" href="assets/icon.jpg">
     <link rel="apple-touch-icon" href="assets/icon.jpg">
@@ -85,6 +85,18 @@
                 </div>
             </section>
 
+            <section class="crm-toolbar">
+                <label class="crm-search-field">
+                    <span data-i18n="searchLabel">Buscar</span>
+                    <input id="crmSearch" type="search" data-i18n-placeholder="searchPlaceholder"
+                        placeholder="Buscar por pedido, cliente, telefono, mesa o reserva">
+                </label>
+                <div class="crm-toolbar-actions">
+                    <button id="exportCurrentCsv" class="btn btn-outline" data-i18n="exportCurrentCsv">Exportar
+                        CSV</button>
+                </div>
+            </section>
+
             <section id="ordersView">
                 <div id="ordersList" class="crm-grid"></div>
             </section>
@@ -107,7 +119,7 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script type="module" src="js/crm.js?v=20260225"></script>
+    <script type="module" src="js/crm.js?v=20260405"></script>
 </body>
 
 </html>
